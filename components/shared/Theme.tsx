@@ -7,8 +7,6 @@ import {
 	MenubarContent,
 	MenubarItem,
 	MenubarMenu,
-	MenubarSeparator,
-	MenubarShortcut,
 	MenubarTrigger,
 } from "@/components/ui/menubar";
 import Image from "next/image";
@@ -60,7 +58,7 @@ const Theme = () => {
 								className={`${theme === item.value && "active-theme"}`}
 							/>
 							<p
-								className={`body-semibold text-light-500 ${
+								className={`body-semibold dark:text-light-900  ${
 									theme === item.value
 										? "text-primary-500"
 										: "text-dark100_light900"
