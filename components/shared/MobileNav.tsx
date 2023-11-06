@@ -9,43 +9,7 @@ import { SignedOut } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { sidebarLinks } from "@/constants";
-import { usePathname } from "next/navigation";
-
-const NavContent = () => {
-	const pathName = usePathname();
-	return (
-		<section className="flex h-full flex-col gap-6 pt-16">
-			{sidebarLinks.map((item) => {
-				const isActive =
-					(pathName.includes(item.route) && item.route.length > 1) ||
-					pathName === item.route;
-
-				return (
-					<SheetClose asChild key={item.route}>
-						<Link
-							href={item.route}
-							className={`${
-								isActive
-									? "primary-gradient rounded-lg text-light-900"
-									: "text-dark300_light900"
-							} flex items-center justify-start gap-4 bg-transparent p-4`}
-						>
-							<Image
-								src={item.imgURL}
-								alt={item.label}
-								width={20}
-								height={20}
-								className={`${isActive ? "" : "invert-colors"}`}
-							/>
-							<p>{item.label}</p>
-						</Link>
-					</SheetClose>
-				);
-			})}
-		</section>
-	);
-};
+import NavContent from "./NavContent";
 
 const MobileNav = () => {
 	return (
@@ -56,7 +20,7 @@ const MobileNav = () => {
 					alt={"Menu"}
 					width={36}
 					height={36}
-					className="invert-colors sm:hidden"
+					className="sm:hidden"
 				/>
 			</SheetTrigger>
 			<SheetContent
@@ -76,7 +40,7 @@ const MobileNav = () => {
 				</Link>
 				<div>
 					<SheetClose asChild>
-						<NavContent />
+						<NavContent hide={false} />
 					</SheetClose>
 					<SignedOut>
 						<div className="flex flex-col gap-3">

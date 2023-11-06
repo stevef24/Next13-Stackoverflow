@@ -6,6 +6,12 @@ export const themes = [
 	{ value: "system", label: "System", icon: "/assets/icons/computer.svg" },
 ];
 
+export const logOut: SidebarLink = {
+	imgURL: "/assets/icons/logout.svg",
+	route: "/logout",
+	label: "Log out",
+};
+
 export const sidebarLinks: SidebarLink[] = [
 	{
 		imgURL: "/assets/icons/home.svg",
