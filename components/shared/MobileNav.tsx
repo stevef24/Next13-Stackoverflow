@@ -20,7 +20,7 @@ const MobileNav = () => {
 					alt={"Menu"}
 					width={36}
 					height={36}
-					className="sm:hidden"
+					className="sm:hidden "
 				/>
 			</SheetTrigger>
 			<SheetContent
