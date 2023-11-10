@@ -45,4 +45,15 @@ export interface BadgeCounts {
 	BRONZE: number;
 }
 
+export type Question = {
+	_id: string;
+	title: string;
+	tags: { name: string; _id: string }[];
+	upVotes: number;
+	author: string;
+	views: number;
+	answers: number;
+	createdAt: Date;
+};
+
 export type BadgeCriteriaType = keyof typeof BADGE_CRITERIA;
