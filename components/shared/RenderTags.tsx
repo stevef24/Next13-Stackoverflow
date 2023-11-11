@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Badge } from "../ui/badge";
 
 type RenderTagsProps = {
-	id: number;
+	id: string;
 	name?: string;
 	questions?: number;
 	showCount?: boolean;

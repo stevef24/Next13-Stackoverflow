@@ -14,7 +14,7 @@ const HomeFilters = ({ filters }: HomeFiltersProps): JSX.Element => {
 			{filters.map((item: AnswerFilter) => {
 				return (
 					<Button
-						className={`subtle-medium ${
+						className={`${
 							isActive === item.value
 								? "bg-primary-100 text-primary-500 font-bold"
 								: "background-light800_dark300 text-dark400_light500"

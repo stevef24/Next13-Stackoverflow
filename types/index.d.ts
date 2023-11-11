@@ -50,9 +50,9 @@ export type Question = {
 	title: string;
 	tags: { name: string; _id: string }[];
 	upVotes: number;
-	author: string;
+	author: { name: string; _id: string; picture: string };
 	views: number;
-	answers: number;
+	answers: string[];
 	createdAt: Date;
 };
 

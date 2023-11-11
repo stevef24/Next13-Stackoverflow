@@ -1,7 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
-const NoResult = () => {
+
+type NoResultProps = {
+	title: string;
+	link: string;
+	buttonTitle: string;
+};
+
+const NoResult = ({ title, link, buttonTitle }: NoResultProps) => {
 	return (
 		<div className="mt-10 flex w-full flex-col items-center justify-center">
 			<Image
@@ -22,14 +29,12 @@ const NoResult = () => {
 				Opps! No results found
 			</h2>
 			<p className="body-regular text-dark500_light700 max-w-md text-center">
-				Be the first to break the silence! 🚀 Ask a Question and kickstart the
-				discussion. our query could be the next big thing others learn from. Get
-				involved! 💡
+				{title}
 			</p>
 
-			<Link href={"/"}>
+			<Link href={link}>
 				<Button className="paragraph-medium mt-5 min-h-[46px] rounded-lg bg-primary-500 px-4 py-3 text-light-900 hover:bg-primary-500 dark:bg-primary-500 dark:light-900">
-					Ask a question
+					{buttonTitle}
 				</Button>
 			</Link>
 		</div>

@@ -5,51 +5,51 @@ import RenderTags from "./RenderTags";
 const RightSidebar = () => {
 	const popularQuestions = [
 		{
-			id: 1,
+			id: "1",
 			title:
 				"Best practices for data fetching in a Next.js application with Server-Side Rendering (SSR)?",
 		},
 		{
-			id: 2,
+			id: "2",
 			title: "what are the updates for the new version of Next.js?",
 		},
 		{
-			id: 3,
+			id: "3",
 			title: "how to use the new Next.js Image component?",
 		},
 		{
-			id: 4,
+			id: "4",
 			title: "Typescript type error in Next.js project",
 		},
 		{
-			id: 5,
+			id: "5",
 			title: "render a component on top of another component in Next.js",
 		},
 	];
 
 	const popularTags = [
 		{
-			id: 1,
+			id: "1",
 			name: "Next.js",
 			questions: 37,
 		},
 		{
-			id: 2,
+			id: "2",
 			name: "React",
 			questions: 34,
 		},
 		{
-			id: 3,
+			id: "3",
 			name: "Javascript",
 			questions: 25,
 		},
 		{
-			id: 4,
+			id: "4",
 			name: "AI",
 			questions: 24,
 		},
 		{
-			id: 5,
+			id: "5",
 			name: "Typescript",
 			questions: 20,
 		},
