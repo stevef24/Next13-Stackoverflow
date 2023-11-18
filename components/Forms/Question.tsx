@@ -18,6 +18,7 @@ import React, { useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
+import { createQuestion } from "@/lib/actions/question.action";
 
 const type: any = "create";
 const Question = () => {
@@ -33,13 +34,15 @@ const Question = () => {
 			tags: [],
 		},
 	});
-	const onSubmit = (data: z.infer<typeof QuestionsSchema>) => {
+	const onSubmit = async (data: z.infer<typeof QuestionsSchema>) => {
 		setIsSubmitting(true);
 
 		try {
 			// make and async call to your
 			//contain all form data
 			//navigate to home page
+			await createQuestion(data);
+			form.reset();
 		} catch (err) {
 		} finally {
 			setIsSubmitting(false);
@@ -111,7 +114,7 @@ const Question = () => {
 				/>
 				<FormField
 					control={form.control}
-					name="title"
+					name="explanation"
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel className="paragraph-semibold text-dark400_light800">
@@ -124,6 +127,10 @@ const Question = () => {
 									onInit={(evt, editor) => {
 										// @ts-ignore
 										editorRef.current = editor;
+									}}
+									onBlur={field.onBlur}
+									onEditorChange={(content) => {
+										field.onChange(content);
 									}}
 									initialValue=""
 									init={{
@@ -215,6 +222,7 @@ const Question = () => {
 					type="submit"
 					className="primary-gradient !text-light-900"
 					disabled={isSubmitting}
+					onClick={() => onSubmit(form.getValues())}
 				>
 					<>
 						{isSubmitting
