@@ -14,13 +14,17 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { QuestionsSchema } from "@/lib/validations";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
 
+const type: any = "create";
 const Question = () => {
 	const editorRef = useRef(null);
+
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
 	const form = useForm<z.infer<typeof QuestionsSchema>>({
 		resolver: zodResolver(QuestionsSchema),
 		defaultValues: {
@@ -30,7 +34,16 @@ const Question = () => {
 		},
 	});
 	const onSubmit = (data: z.infer<typeof QuestionsSchema>) => {
-		console.log(data);
+		setIsSubmitting(true);
+
+		try {
+			// make and async call to your
+			//contain all form data
+			//navigate to home page
+		} catch (err) {
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	function handleTagRemove(tag: string) {
@@ -161,7 +174,7 @@ const Question = () => {
 							<FormControl className="mt-3.5">
 								<>
 									<Input
-										placeholder="your question"
+										placeholder="tags"
 										className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
 										onKeyDown={(e) => {
 											handleKeyDown(e, field);
@@ -198,8 +211,20 @@ const Question = () => {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit" className="">
-					Submit
+				<Button
+					type="submit"
+					className="primary-gradient !text-light-900"
+					disabled={isSubmitting}
+				>
+					<>
+						{isSubmitting
+							? type === "edit"
+								? "Editing..."
+								: "Posting..."
+							: type === "edit"
+							? "Edit Question"
+							: "Ask a question"}
+					</>
 				</Button>
 			</form>
 		</Form>
