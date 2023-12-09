@@ -19,10 +19,18 @@ import { Editor } from "@tinymce/tinymce-react";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.action";
+import { useRouter, usePathname } from "next/navigation";
 
 const type: any = "create";
-const Question = () => {
+
+type Props = {
+	mongoUserId: string;
+};
+
+const Question = ({ mongoUserId }: Props) => {
 	const editorRef = useRef(null);
+	const router = useRouter();
+	const path = usePathname();
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -30,7 +38,7 @@ const Question = () => {
 		resolver: zodResolver(QuestionsSchema),
 		defaultValues: {
 			title: "",
-			explanation: "",
+			content: "",
 			tags: [],
 		},
 	});
@@ -41,11 +49,19 @@ const Question = () => {
 			// make and async call to your
 			//contain all form data
 			//navigate to home page
-			await createQuestion(data);
+			await createQuestion({
+				title: data.title,
+				content: data.content,
+				tags: data.tags,
+				author: JSON.parse(mongoUserId),
+				path: path,
+			});
 			form.reset();
 		} catch (err) {
+			console.log(err);
 		} finally {
 			setIsSubmitting(false);
+			router.push("/");
 		}
 	};
 
@@ -60,8 +76,6 @@ const Question = () => {
 		if (e.key === "Enter" && field.name === "tags") {
 			e.preventDefault();
 
-			console.log(field.value);
-
 			const tagInput = e.target as HTMLInputElement;
 
 			const tagValue = tagInput.value.trim();
@@ -75,7 +89,6 @@ const Question = () => {
 				}
 
 				if (!field.value.includes(tagValue)) {
-					console.log("------>", field);
 					form.setValue("tags", [...field.value, tagValue]);
 					tagInput.value = "";
 					form.clearErrors("tags");
@@ -114,11 +127,11 @@ const Question = () => {
 				/>
 				<FormField
 					control={form.control}
-					name="explanation"
+					name="content"
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel className="paragraph-semibold text-dark400_light800">
-								Detailed explanation of your problem{" "}
+								Detailed content of your problem
 								<span className="text-primary-500">*</span>
 							</FormLabel>
 							<FormControl className="mt-3.5">
@@ -192,7 +205,7 @@ const Question = () => {
 											{field.value.map((tag: any) => (
 												<Badge
 													key={tag}
-													className="subtle-medium background-light800_dark300 text-light400_light500 flex items-center justify-center gap-2 rounded-md brder-none px-4 py-2 capitalize"
+													className="subtle-medium background-light800_dark300 text-light400_light500 flex items-center justify-center gap-2 rounded-md mr-1 brder-none px-4 py-2 capitalize"
 													onClick={() => handleTagRemove(tag)}
 												>
 													{tag}
