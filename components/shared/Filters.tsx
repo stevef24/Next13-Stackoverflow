@@ -1,4 +1,5 @@
 import { type AnswerFilter } from "@/constants/filters";
+import React from "react";
 
 import {
 	Select,
@@ -21,7 +22,7 @@ const Filters = ({
 	filters,
 	containerClasses,
 	otherClasses,
-}: FiltersProps): JSX.Element => {
+}: FiltersProps): React.JSX.Element => {
 	return (
 		<>
 			<HomeFilters filters={filters} />
