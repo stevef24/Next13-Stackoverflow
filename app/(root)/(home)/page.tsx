@@ -8,37 +8,6 @@ import { getQuestions } from "@/lib/actions/question.action";
 import { Question } from "@/types";
 import Link from "next/link";
 
-const questions: Question[] = [
-	{
-		_id: "1",
-		title: "How to use React Query?",
-		tags: [
-			{ name: "React", _id: "1" },
-			{ name: "React Query", _id: "2" },
-			{ name: "Javascript", _id: "3" },
-		],
-		upVotes: 10,
-		author: { name: "John Doe", _id: "4", picture: "" },
-		views: 100,
-		answers: ["hello world", "how are you"],
-		createdAt: new Date("2022-01-01T00:00:00.000Z"),
-	},
-	{
-		_id: "2",
-		title: "How to center a div?",
-		tags: [
-			{ name: "css", _id: "1" },
-			{ name: "React", _id: "2" },
-			{ name: "html", _id: "3" },
-		],
-		author: { name: "John Doe", _id: "5", picture: "" },
-		upVotes: 12,
-		views: 120,
-		answers: ["how much is it", "how are you"],
-		createdAt: new Date("2021-09-01"),
-	},
-];
-
 export default async function Home() {
 	const results = await getQuestions({});
 
