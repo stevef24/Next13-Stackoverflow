@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable */
 
 import { Webhook } from "svix";
 import { headers } from "next/headers";

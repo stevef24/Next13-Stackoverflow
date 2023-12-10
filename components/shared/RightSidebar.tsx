@@ -83,6 +83,7 @@ const RightSidebar = () => {
 				<div className="mt-7 flex flex-col gap-4">
 					{popularTags.map(({ id, name, questions }) => (
 						<RenderTags
+							key={id}
 							id={id}
 							name={name}
 							questions={questions}
