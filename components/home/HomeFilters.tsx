@@ -2,6 +2,7 @@
 import { AnswerFilter } from "@/constants/filters";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import React from "react";
 
 type HomeFiltersProps = {
 	filters: AnswerFilter[];

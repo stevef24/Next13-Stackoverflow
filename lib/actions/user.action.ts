@@ -55,13 +55,13 @@ export async function deleteUser(userParams: DeleteUserParams) {
 		throw new Error("User not found");
 	}
 
-	const userQuestionIds = await QuestionModel.find({
-		author: user._id,
-	}).distinct("_id");
+	// const userQuestionIds = await QuestionModel.find({
+	// 	author: user._id,
+	// }).distinct("_id");
 
 	await QuestionModel.deleteMany({ author: user._id });
 
-	//TODO delete all user answers , comments and replies
+	// TODO delete all user answers , comments and replies
 
-	const deletedUser = await UserModel.findByIdAndDelete(user._id);
+	// const deletedUser = await UserModel.findByIdAndDelete(user._id);
 }

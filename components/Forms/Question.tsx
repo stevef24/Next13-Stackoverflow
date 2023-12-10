@@ -47,8 +47,8 @@ const Question = ({ mongoUserId }: Props) => {
 
 		try {
 			// make and async call to your
-			//contain all form data
-			//navigate to home page
+			// contain all form data
+			// navigate to home page
 			await createQuestion({
 				title: data.title,
 				content: data.content,

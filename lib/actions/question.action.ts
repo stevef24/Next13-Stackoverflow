@@ -21,7 +21,6 @@ export async function getQuestions(params: GetQuestionsParams) {
 		return { questions };
 	} catch (error) {
 		console.log(error);
-	} finally {
 	}
 }
 
@@ -29,10 +28,10 @@ export async function createQuestion(params: CreateQuestionParams) {
 	try {
 		connectToDatabase();
 
-		//getting all the data from the params object that was passed in
+		// getting all the data from the params object that was passed in
 		const { title, content, tags, author, path } = params;
 
-		//create the question from the model
+		// create the question from the model
 		const question = await QuestionModel.create({
 			title,
 			content,
@@ -40,7 +39,7 @@ export async function createQuestion(params: CreateQuestionParams) {
 		});
 
 		const tagDocuments = [];
-		//create tags or get the existing ones
+		// create tags or get the existing ones
 		for (const tag of tags) {
 			const existingTag = await TagModel.findOneAndUpdate(
 				{
@@ -57,9 +56,9 @@ export async function createQuestion(params: CreateQuestionParams) {
 			$push: { tags: { $each: tagDocuments } },
 		});
 
-		//create an interaction record for the user ask question action
+		// create an interaction record for the user ask question action
 
-		//increment author reputation by +5 points for creating a question
+		// increment author reputation by +5 points for creating a question
 
 		revalidatePath(path);
 	} catch (error) {
