@@ -1,10 +1,10 @@
-import HomeFilters from "@/components/home/HomeFilters";
 import QuestionCard from "@/components/Cards/QuestionCard";
 import Filters from "@/components/shared/Filters";
 import LocalSearchBar from "@/components/shared/LocalSearchBar";
 import NoResult from "@/components/shared/NoResult";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
+import { getQuestions } from "@/lib/actions/question.action";
 import { Question } from "@/types";
 import Link from "next/link";
 
@@ -39,7 +39,10 @@ const questions: Question[] = [
 	},
 ];
 
-export default function Home() {
+export default async function Home() {
+	const results = await getQuestions({});
+
+	console.log(results?.questions);
 	return (
 		<>
 			<div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -64,8 +67,8 @@ export default function Home() {
 					containerClasses="hidden max-md:flex"
 				/>
 				<div className="mt-10 flex w-full flex-col gap-6">
-					{questions.length > 0 ? (
-						questions.map((question) => (
+					{results?.questions.length > 0 ? (
+						results?.questions.map((question) => (
 							<QuestionCard
 								key={question._id}
 								_id={question._id}

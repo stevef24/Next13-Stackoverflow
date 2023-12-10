@@ -1,5 +1,27 @@
-const AskQuestions = () => {
-	return <div>Ask-questions</div>;
+import Question from "@/components/Forms/Question";
+import { getUserById } from "@/lib/actions/user.action";
+import { auth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
+
+const Page = async () => {
+	// const { userId } = auth();
+	// console.log(userId);
+	const userId = "1029384756";
+
+	if (!userId) {
+		redirect("/sign-in");
+	}
+
+	const mongoUser = await getUserById(userId);
+
+	return (
+		<div>
+			<h1 className="h1-bold text-dark100_light900">Ask a Question</h1>
+			<div className="mt-9">
+				<Question mongoUserId={JSON.stringify(mongoUser._id)} />
+			</div>
+		</div>
+	);
 };
 
-export default AskQuestions;
+export default Page;
