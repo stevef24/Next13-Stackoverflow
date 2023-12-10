@@ -7,7 +7,7 @@ import React from "react";
 type HomeFiltersProps = {
 	filters: AnswerFilter[];
 };
-const HomeFilters = ({ filters }: HomeFiltersProps): JSX.Element => {
+const HomeFilters = ({ filters }: HomeFiltersProps): React.JSX.Element => {
 	const [isActive, setIsActive] = useState("newest");
 
 	return (
