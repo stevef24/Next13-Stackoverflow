@@ -8,7 +8,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
 	// You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
-	const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
+	const WEBHOOK_SECRET = process.env.NEXT_CLERK_WEBHOOK_SECRET;
 
 	//TODO: add webhook secret to .env
 	if (!WEBHOOK_SECRET) {

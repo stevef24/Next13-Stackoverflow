@@ -9,7 +9,7 @@ export default authMiddleware({
 		"/api/webhooks",
 		"/api/chatgpt",
 		"/tags",
-		"tags/id",
+		"tags/:id",
 		"/questions/id",
 		"/profile/:id",
 		"/community",
