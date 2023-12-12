@@ -1,7 +1,8 @@
-import Link from "next/link";
-import Image from "next/image";
 import { SignedIn, UserButton } from "@clerk/nextjs";
-import Theme from "@/components/shared/Theme";
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+import Theme from "./Theme";
 import MobileNav from "./MobileNav";
 import GlobalSearch from "./GlobalSearch";
 
@@ -11,17 +12,21 @@ const Navbar = () => {
 			<Link href="/" className="flex items-center gap-1">
 				<Image
 					src="/assets/images/site-logo.svg"
-					alt="DevFlow logo"
 					width={23}
 					height={23}
+					alt="DevFlow"
 				/>
+
 				<p className="h2-bold font-spaceGrotesk text-dark-100 dark:text-light-900 max-sm:hidden">
 					Dev <span className="text-primary-500">Overflow</span>
 				</p>
 			</Link>
+
 			<GlobalSearch />
+
 			<div className="flex-between gap-5">
 				<Theme />
+
 				<SignedIn>
 					<UserButton
 						afterSignOutUrl="/"
@@ -30,11 +35,12 @@ const Navbar = () => {
 								avatarBox: "h-10 w-10",
 							},
 							variables: {
-								colorPrimary: "var(--color-primary-500)",
+								colorPrimary: "#ff7000",
 							},
 						}}
 					/>
 				</SignedIn>
+
 				<MobileNav />
 			</div>
 		</nav>

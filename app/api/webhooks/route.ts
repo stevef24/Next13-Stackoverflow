@@ -73,6 +73,7 @@ export async function POST(req: Request) {
 		return NextResponse.json({ message: "OK", user: mongoUser });
 	}
 
+	console.log({ eventType });
 	if (eventType === "user.updated") {
 		const { id, email_addresses, image_url, username, first_name, last_name } =
 			evt.data;
