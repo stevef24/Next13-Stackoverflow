@@ -29,9 +29,11 @@ export async function createUser(userParams: CreateUserParams) {
 		connectToDatabase();
 
 		const newUser = await UserModel.create(userParams);
-
 		return newUser;
-	} catch (error) {}
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
 }
 
 export async function updateUser(userParams: UpdateUserParams) {

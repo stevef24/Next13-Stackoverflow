@@ -10,7 +10,7 @@ export default authMiddleware({
 		"/api/chatgpt",
 		"/tags",
 		"tags/:id",
-		"/questions/id",
+		"/questions/:id",
 		"/profile/:id",
 		"/community",
 		"/jobs",
