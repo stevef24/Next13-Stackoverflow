@@ -5,11 +5,26 @@ import { connectToDatabase } from "../mongoose";
 import {
 	CreateUserParams,
 	DeleteUserParams,
+	GetAllUsersParams,
 	GetUserByIdParams,
 	UpdateUserParams,
 } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import QuestionModel from "@/database/question.model";
+
+export async function getAllUsers(params: GetAllUsersParams) {
+	try {
+		connectToDatabase();
+
+		const users = await UserModel.find({});
+		if (!users) throw new Error("No users found");
+
+		return { users };
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
 
 export async function getUserById(params: GetUserByIdParams) {
 	try {
