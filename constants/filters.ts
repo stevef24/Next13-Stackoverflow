@@ -26,9 +26,9 @@ export const QuestionFilters: AnswerFilter[] = [
 
 export const TagFilters: AnswerFilter[] = [
 	{ name: "Popular", value: "popular" },
-	{ name: "Recent", value: "recent" },
+	{ name: "Most Recent", value: "recent" },
 	{ name: "Name", value: "name" },
-	{ name: "Old", value: "old" },
+	{ name: "Oldest", value: "old" },
 ];
 
 export const HomePageFilters: AnswerFilter[] = [
