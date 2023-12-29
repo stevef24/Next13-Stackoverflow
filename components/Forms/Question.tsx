@@ -20,6 +20,7 @@ import { Badge } from "../ui/badge";
 import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.action";
 import { useRouter, usePathname } from "next/navigation";
+import { useTheme } from "@/context/ThemeProvider";
 
 const type: any = "create";
 
@@ -28,6 +29,7 @@ type Props = {
 };
 
 const Question = ({ mongoUserId }: Props) => {
+	const { theme } = useTheme();
 	const editorRef = useRef(null);
 	const router = useRouter();
 	const path = usePathname();
@@ -160,18 +162,19 @@ const Question = ({ mongoUserId }: Props) => {
 											"anchor",
 											"searchreplace",
 											"visualblocks",
-											"code",
+											"codesample",
 											"fullscreen",
 											"insertdatetime",
 											"media",
 											"table",
 										],
 										toolbar:
-											"undo redo | formatselect | " +
-											"bold italic backcolor | alignleft aligncenter " +
-											"alignright alignjustify | bullist numlist outdent indent | " +
-											"removeformat | help",
+											"undo redo | " +
+											"codesample | bold italic forecolor | alignleft aligncenter |" +
+											"alignright alignjustify | bullist numlist",
 										content_style: "body { font-family:Inter; font-size:16px }",
+										skin: theme === "dark" ? "oxide-dark" : "oxide",
+										content_css: theme === "dark" ? "dark" : "light",
 									}}
 								/>
 							</FormControl>
