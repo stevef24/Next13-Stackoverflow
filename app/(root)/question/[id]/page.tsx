@@ -4,11 +4,24 @@ import Image from "next/image";
 import Metric from "@/components/shared/Metric";
 import { formatNumber, getTimestamp } from "@/lib/utils";
 import ParseHTML from "@/components/shared/ParseHTML";
-import RenderTags from "@/components/shared/RenderTags";
+import RenderTags, { RenderTagsProps } from "@/components/shared/RenderTags";
 import Answers from "@/components/Forms/Answers";
+import { auth } from "@clerk/nextjs";
+import { getUserById } from "@/lib/actions/user.action";
+import AllAnswers from "@/components/shared/AllAnswers";
+import Votes from "@/components/shared/Votes";
 
 const Page = async ({ params, searchParams }: any) => {
+	const { userId: clerkId } = auth();
+
+	let mongoUser;
+
+	//check if this user exist and then find it in mongo
+	if (clerkId) {
+		mongoUser = await getUserById({ userId: clerkId });
+	}
 	const result = await getQuestionByID({ questionId: params.id });
+
 	return (
 		<>
 			<div className="flex-start w-full flex-col">
@@ -28,7 +41,18 @@ const Page = async ({ params, searchParams }: any) => {
 							{result.author.name}
 						</p>
 					</Link>
-					<div className="flex justify-end">VOTING</div>
+					<div className="flex justify-end">
+						<Votes
+							type="question"
+							itemId={JSON.stringify(result._id)}
+							userId={JSON.stringify(mongoUser._id)}
+							upVotes={result.upvotes.length}
+							hasUpVoted={result.upvotes.includes(mongoUser._id)}
+							downVotes={result.downvotes.length}
+							hasDownVoted={result.downvotes.includes(mongoUser._id)}
+							hasSaved={mongoUser?.saved.includes(result._id)}
+						/>
+					</div>
 				</div>
 				<h2 className="h2-semibold text-dark200_light900 nt-3.5 w-full text-left">
 					{result.title}
@@ -60,17 +84,26 @@ const Page = async ({ params, searchParams }: any) => {
 			<div className="text-dark300_light700">
 				<ParseHTML data={result.content} />
 			</div>
-			<div>
-				{result.tags.map((tag) => (
+			<div className="flex gap-1">
+				{result.tags.map((tag: RenderTagsProps) => (
 					<RenderTags
-						key={tag._id}
-						id={tag._id}
+						key={tag.id}
+						id={tag.id}
 						name={tag.name}
 						showCount={false}
 					/>
 				))}
 			</div>
-			<Answers></Answers>
+			<AllAnswers
+				questionId={result._id}
+				userId={JSON.stringify(mongoUser._id)}
+				totalAnswers={result.answers.length}
+			/>
+			<Answers
+				question={result.content}
+				questionId={JSON.stringify(result._id)}
+				authorId={JSON.stringify(mongoUser._id)}
+			/>
 		</>
 	);
 };

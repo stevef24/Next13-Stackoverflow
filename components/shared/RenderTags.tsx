@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
 
-type RenderTagsProps = {
+export type RenderTagsProps = {
 	id: string;
 	name?: string;
 	questions?: number;
