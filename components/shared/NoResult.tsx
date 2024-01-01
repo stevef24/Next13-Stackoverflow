@@ -6,6 +6,7 @@ type NoResultProps = {
 	title: string;
 	link: string;
 	buttonTitle: string;
+	description?: string;
 };
 
 const NoResult = ({ title, link, buttonTitle }: NoResultProps) => {

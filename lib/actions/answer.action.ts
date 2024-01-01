@@ -2,7 +2,11 @@
 
 import AnswerModel from "@/database/answer.model";
 import { connectToDatabase } from "../mongoose";
-import { CreateAnswerParams, GetAnswersParams } from "./shared.types";
+import {
+	AnswerVoteParams,
+	CreateAnswerParams,
+	GetAnswersParams,
+} from "./shared.types";
 import QuestionModel from "@/database/question.model";
 import { revalidatePath } from "next/cache";
 import UserModel from "@/database/user.model";
@@ -40,5 +44,69 @@ export async function getAllAnswers(params: GetAnswersParams) {
 	} catch (error) {
 		console.log(error);
 		throw error;
+	}
+}
+export async function upVoteAnswer(params: AnswerVoteParams) {
+	try {
+		connectToDatabase();
+		const { answerId, userId, hasdownVoted, hasupVoted, path } = params;
+
+		let updateQuery = {};
+		if (hasupVoted) {
+			updateQuery = {
+				$pull: { upvotes: userId },
+			};
+		} else if (hasdownVoted) {
+			updateQuery = {
+				$pull: { downvotes: userId },
+				$push: { upvotes: userId },
+			};
+		} else {
+			updateQuery = { $addToSet: { upvotes: userId } };
+		}
+
+		const Answer = await AnswerModel.findByIdAndUpdate(answerId, updateQuery, {
+			new: true,
+		});
+
+		if (!Answer) {
+			throw new Error("Could not find answer with that ID");
+		}
+
+		revalidatePath(path);
+	} catch (error) {
+		throw new Error("Could not find answer with that ID");
+	}
+}
+export async function downVoteAnswer(params: AnswerVoteParams) {
+	try {
+		connectToDatabase();
+		const { answerId, userId, hasdownVoted, hasupVoted, path } = params;
+
+		let updateQuery = {};
+		if (hasdownVoted) {
+			updateQuery = {
+				$pull: { downvotes: userId },
+			};
+		} else if (hasupVoted) {
+			updateQuery = {
+				$pull: { upvotes: userId },
+				$push: { downvotes: userId },
+			};
+		} else {
+			updateQuery = { $addToSet: { downvotes: userId } };
+		}
+
+		const Answer = await AnswerModel.findByIdAndUpdate(answerId, updateQuery, {
+			new: true,
+		});
+
+		if (!Answer) {
+			throw new Error("Could not find answer with that ID");
+		}
+
+		revalidatePath(path);
+	} catch (error) {
+		throw new Error("Could not find answer with that ID");
 	}
 }

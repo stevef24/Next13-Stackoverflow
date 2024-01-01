@@ -1,17 +1,24 @@
 "use client";
 
+import { downVoteAnswer, upVoteAnswer } from "@/lib/actions/answer.action";
+import {
+	downVoteQuestion,
+	upVoteQuestion,
+} from "@/lib/actions/question.action";
+import { toggleSaveQuestion } from "@/lib/actions/user.action";
 import { formatNumber } from "@/lib/utils";
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 
 interface Props {
 	type: string;
 	itemId: string;
 	userId: string;
 	upVotes: number;
-	hasUpVoted: boolean;
+	hasupVoted: boolean;
 	downVotes: number;
-	hasDownVoted: boolean;
-	hasSaved: boolean;
+	hasdownVoted: boolean;
+	hasSaved?: boolean;
 }
 
 const Votes = ({
@@ -19,20 +26,73 @@ const Votes = ({
 	itemId,
 	userId,
 	upVotes,
-	hasUpVoted,
+	hasupVoted,
 	downVotes,
-	hasDownVoted,
+	hasdownVoted,
 	hasSaved,
 }: Props) => {
-	const handleSave = async () => {};
-	const handleVote = async (action: string) => {};
+	const path = usePathname();
+	const router = useRouter();
+	const handleSave = async () => {
+		await toggleSaveQuestion({
+			userId: JSON.parse(userId),
+			questionId: JSON.parse(itemId),
+			path: path,
+		});
+	};
+
+	const handleVote = async (action: string) => {
+		if (!userId) {
+			return;
+		}
+
+		if (action === "upvote") {
+			if (type === "Question") {
+				await upVoteQuestion({
+					questionId: JSON.parse(itemId),
+					userId: JSON.parse(userId),
+					hasupVoted,
+					hasdownVoted,
+					path: path,
+				});
+			} else if (type === "Answer") {
+				await upVoteAnswer({
+					answerId: JSON.parse(itemId),
+					userId: JSON.parse(userId),
+					hasupVoted,
+					hasdownVoted,
+					path,
+				});
+			}
+		}
+		if (action === "downvote") {
+			if (type === "Question") {
+				await downVoteQuestion({
+					questionId: JSON.parse(itemId),
+					userId: JSON.parse(userId),
+					hasupVoted,
+					hasdownVoted,
+					path,
+				});
+			} else if (type === "Answer") {
+				await downVoteAnswer({
+					answerId: JSON.parse(itemId),
+					userId: JSON.parse(userId),
+					hasupVoted,
+					hasdownVoted,
+					path,
+				});
+			}
+		}
+	};
+
 	return (
 		<div className="flex gap-5">
 			<div className="flex-center gap-2.5">
 				<div className="flex-center gap-1.5">
 					<Image
 						src={
-							hasUpVoted
+							hasupVoted
 								? "/assets/icons/upvoted.svg"
 								: "/assets/icons/upvote.svg"
 						}
@@ -40,7 +100,7 @@ const Votes = ({
 						width={18}
 						height={18}
 						className="cursor-pointer"
-						onClick={() => {}}
+						onClick={() => handleVote("upvote")}
 					/>
 					<div className="flex-center background-light700_dark min-w-[18px]">
 						<p className="subtle-medium text-dark400_light900">
@@ -49,7 +109,7 @@ const Votes = ({
 					</div>
 					<Image
 						src={
-							hasUpVoted
+							hasdownVoted
 								? "/assets/icons/downvoted.svg"
 								: "/assets/icons/downvote.svg"
 						}
@@ -57,7 +117,7 @@ const Votes = ({
 						width={18}
 						height={18}
 						className="cursor-pointer"
-						onClick={handleVote}
+						onClick={() => handleVote("downvote")}
 					/>
 					<div className="flex-center background-light700_dark min-w-[18px]">
 						<p className="subtle-medium text-dark400_light900">
@@ -66,18 +126,20 @@ const Votes = ({
 					</div>
 				</div>
 			</div>
-			<Image
-				src={
-					hasSaved
-						? "/assets/icons/star-filled.svg"
-						: "/assets/icons/star-red.svg"
-				}
-				alt={"alt"}
-				width={18}
-				height={18}
-				className="cursor-pointer"
-				onClick={handleSave}
-			/>
+			{type === "Question" && (
+				<Image
+					src={
+						hasSaved
+							? "/assets/icons/star-filled.svg"
+							: "/assets/icons/star-red.svg"
+					}
+					alt={"alt"}
+					width={18}
+					height={18}
+					className="cursor-pointer"
+					onClick={handleSave}
+				/>
+			)}
 		</div>
 	);
 };
