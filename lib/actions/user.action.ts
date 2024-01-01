@@ -6,12 +6,17 @@ import {
 	CreateUserParams,
 	DeleteUserParams,
 	GetAllUsersParams,
+	GetSavedQuestionsParams,
 	GetUserByIdParams,
 	ToggleSaveQuestionParams,
 	UpdateUserParams,
 } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import QuestionModel from "@/database/question.model";
+import TagModel from "@/database/tag.model";
+import { FilterQuery } from "mongoose";
+import { TypeOf } from "zod";
+import Question from "@/components/Forms/Question";
 
 export async function getAllUsers(params: GetAllUsersParams) {
 	try {
@@ -110,6 +115,74 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 		});
 
 		revalidatePath(path);
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
+
+export async function getSavedQuestions(params: GetSavedQuestionsParams) {
+	try {
+		connectToDatabase();
+
+		const { clerkId, searchQuery, filter, page = 1, pageSize = 20 } = params;
+
+		const skipAmount = (page - 1) * pageSize;
+
+		const query: FilterQuery<typeof Question> = searchQuery
+			? { title: { $regex: new RegExp(searchQuery, "i") } }
+			: {};
+
+		let sortOptions = {};
+
+		switch (filter) {
+			case "most_recent":
+				sortOptions = { createdAt: -1 };
+				break;
+			case "oldest":
+				sortOptions = { createdAt: 1 };
+				break;
+			case "most_voted":
+				sortOptions = { upvotes: -1 };
+				break;
+			case "most_viewed":
+				sortOptions = { views: -1 };
+				break;
+			case "most_answered":
+				sortOptions = { answers: -1 };
+				break;
+
+			default:
+				break;
+		}
+
+		const user = await UserModel.findOne({ clerkId }).populate({
+			path: "saved",
+			match: query,
+			options: {
+				sort: sortOptions,
+				skip: skipAmount,
+				limit: pageSize + 1,
+			},
+			populate: [
+				{ path: "tags", model: TagModel, select: "_id name" },
+				{
+					path: "author",
+					model: UserModel,
+					select: "_id clerkId name picture",
+				},
+			],
+		});
+
+		const isNext = user.saved.length > pageSize;
+
+		if (!user) {
+			throw new Error("User not found");
+		}
+
+		const savedQuestions = user.saved;
+
+		return { questions: savedQuestions, isNext };
 	} catch (error) {
 		console.log(error);
 		throw error;

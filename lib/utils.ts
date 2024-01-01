@@ -41,9 +41,11 @@ export const getTimestamp = (createdAt: Date) => {
 
 export const formatNumber = (count: number) => {
 	if (count >= 1000000) {
-		return `${(count / 1000000).toFixed(1)}M`;
+		const formattedNum = (count / 1000000).toFixed(1);
+		return `${formattedNum}M`;
 	} else if (count >= 1000) {
-		return `${(count / 1000).toFixed(1)}k`;
+		const formattedNum = (count / 1000).toFixed(1);
+		return `${formattedNum}K`;
 	} else {
 		return count.toString();
 	}

@@ -1,13 +1,20 @@
-import QuestionCard from "@/components/Cards/QuestionCard";
+import QuestionCard, { QuestionProps } from "@/components/Cards/QuestionCard";
 import Filters from "@/components/shared/Filters";
 import LocalSearchBar from "@/components/shared/LocalSearchBar";
 import NoResult from "@/components/shared/NoResult";
 import { QuestionFilters } from "@/constants/filters";
-import { getQuestions } from "@/lib/actions/question.action";
+import { getSavedQuestions } from "@/lib/actions/user.action";
+import { auth } from "@clerk/nextjs";
 
 export default async function Home() {
-	const results = await getQuestions({});
+	const { userId: clerkId } = auth();
 
+	if (!clerkId) {
+		return null;
+	}
+	const results = await getSavedQuestions({
+		clerkId,
+	});
 	return (
 		<>
 			<div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -28,13 +35,13 @@ export default async function Home() {
 				/>
 				<div className="mt-10 flex w-full flex-col gap-6">
 					{results!.questions.length > 0 ? (
-						results?.questions.map((question) => (
+						results?.questions.map((question: QuestionProps) => (
 							<QuestionCard
 								key={question._id}
 								_id={question._id}
 								title={question.title}
 								tags={question.tags}
-								upVotes={question.upVotes}
+								upvotes={question.upvotes}
 								author={question.author}
 								views={question.views}
 								answers={question.answers}
