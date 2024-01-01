@@ -129,10 +129,6 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
 
 		const skipAmount = (page - 1) * pageSize;
 
-		const query: FilterQuery<typeof Question> = searchQuery
-			? { title: { $regex: new RegExp(searchQuery, "i") } }
-			: {};
-
 		let sortOptions = {};
 
 		switch (filter) {
@@ -155,6 +151,9 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
 			default:
 				break;
 		}
+		const query: FilterQuery<typeof Question> = searchQuery
+			? { title: { $regex: new RegExp(searchQuery, "i") } }
+			: {};
 
 		const user = await UserModel.findOne({ clerkId }).populate({
 			path: "saved",

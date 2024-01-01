@@ -50,3 +50,17 @@ export const formatNumber = (count: number) => {
 		return count.toString();
 	}
 };
+
+export function capitalizeFirstLetter(inputString: string): string {
+	// Check if the inputString is not empty
+	if (inputString) {
+		// Capitalize the first letter and concatenate it with the rest in lowercase
+		const resultString =
+			inputString.charAt(0).toUpperCase() + inputString.slice(1).toLowerCase();
+		return resultString;
+	} else {
+		return inputString; // Return empty string if input is empty
+	}
+}
+
+// Example usage:
