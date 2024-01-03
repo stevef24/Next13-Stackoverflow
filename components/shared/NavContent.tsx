@@ -4,9 +4,12 @@ import { usePathname } from "next/navigation";
 import { Sheet, SheetClose } from "../ui/sheet";
 import Image from "next/image";
 import Link from "next/link";
+import { useAuth } from "@clerk/nextjs";
 
 const NavContent = ({ hide = false }: { hide: Boolean }) => {
 	const pathName = usePathname();
+	const { userId } = useAuth();
+
 	return (
 		<section className="flex h-full flex-col gap-6 pt-16 w-full">
 			<Sheet>
@@ -14,6 +17,14 @@ const NavContent = ({ hide = false }: { hide: Boolean }) => {
 					const isActive =
 						(pathName.includes(item.route) && item.route.length > 1) ||
 						pathName === item.route;
+
+					if (item.route === "/profile") {
+						if (userId) {
+							item.route = `/profile/${userId}`;
+						} else {
+							return null;
+						}
+					}
 
 					return (
 						<SheetClose asChild key={item.route}>

@@ -187,3 +187,23 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
 		throw error;
 	}
 }
+
+export async function getUserInfo(params: GetUserByIdParams) {
+	try {
+		connectToDatabase();
+
+		const { userId } = params;
+
+		const user = await UserModel.findOne({ clerkId: userId });
+		//find out how many questions the user has asked
+
+		const questionsAsked = await QuestionModel.countDocuments({
+			author: user._id,
+		});
+		console.log(questionsAsked);
+
+		if (!user) throw new Error("User not found");
+
+		return user;
+	} catch (error) {}
+}
