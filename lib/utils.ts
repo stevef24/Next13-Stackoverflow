@@ -63,4 +63,8 @@ export function capitalizeFirstLetter(inputString: string): string {
 	}
 }
 
-// Example usage:
+export function getJoinedDate(date: Date): string {
+	const month = date.toLocaleString("default", { month: "long" });
+	const year = date.getFullYear();
+	return `${month} ${year}`;
+}

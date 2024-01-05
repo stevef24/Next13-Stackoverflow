@@ -15,8 +15,8 @@ import { revalidatePath } from "next/cache";
 import QuestionModel from "@/database/question.model";
 import TagModel from "@/database/tag.model";
 import { FilterQuery } from "mongoose";
-import { TypeOf } from "zod";
 import Question from "@/components/Forms/Question";
+import AnswerModel from "@/database/answer.model";
 
 export async function getAllUsers(params: GetAllUsersParams) {
 	try {
@@ -200,7 +200,9 @@ export async function getUserInfo(params: GetUserByIdParams) {
 		const questionsAsked = await QuestionModel.countDocuments({
 			author: user._id,
 		});
-		console.log(questionsAsked);
+		const totalAnswers = await AnswerModel.countDocuments({
+			author: user._id,
+		});
 
 		if (!user) throw new Error("User not found");
 
