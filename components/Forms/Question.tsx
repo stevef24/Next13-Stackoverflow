@@ -22,26 +22,29 @@ import { createQuestion } from "@/lib/actions/question.action";
 import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "@/context/ThemeProvider";
 
-const type: any = "create";
-
 type Props = {
+	type?: string;
 	mongoUserId: string;
+	questionDetails?: string;
 };
 
-const Question = ({ mongoUserId }: Props) => {
+const Question = ({ mongoUserId, type, questionDetails }: Props) => {
 	const { theme } = useTheme();
 	const editorRef = useRef(null);
 	const router = useRouter();
 	const path = usePathname();
-
 	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const parsedquestionDetails = JSON.parse(questionDetails || "");
+
+	const groupedTags = parsedquestionDetails.tags.map((tag: any) => tag.name);
 
 	const form = useForm<z.infer<typeof QuestionsSchema>>({
 		resolver: zodResolver(QuestionsSchema),
 		defaultValues: {
-			title: "",
-			content: "",
-			tags: [],
+			title: parsedquestionDetails.title || "",
+			content: parsedquestionDetails.content || "",
+			tags: groupedTags || [],
 		},
 	});
 	const onSubmit = async (data: z.infer<typeof QuestionsSchema>) => {
@@ -147,7 +150,7 @@ const Question = ({ mongoUserId }: Props) => {
 									onEditorChange={(content) => {
 										field.onChange(content);
 									}}
-									initialValue=""
+									initialValue={parsedquestionDetails.content || ""}
 									init={{
 										height: 350,
 										menubar: false,

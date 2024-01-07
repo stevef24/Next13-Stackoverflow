@@ -12,16 +12,20 @@ const AnswersTab = async ({ searchParams, userId, clerkId }: Props) => {
 
 	return (
 		<>
-			{userAnswer.answers.map((answer) => (
-				<AnswerCard
-					key={answer.id}
-					_id={answer.id}
-					question={answer.question}
-					author={answer.author}
-					upvotes={answer.upvotes}
-					createdAt={answer.createdAt}
-				/>
-			))}
+			{userAnswer.answers.map((answer) => {
+				console.log(answer.id);
+				return (
+					<AnswerCard
+						key={answer.id}
+						_id={answer.id}
+						question={answer.question}
+						author={answer.author}
+						upvotes={answer.upvotes}
+						createdAt={answer.createdAt}
+						clerkId={clerkId}
+					/>
+				);
+			})}
 		</>
 	);
 };

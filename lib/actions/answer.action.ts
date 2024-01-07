@@ -117,8 +117,17 @@ export async function deleteAnswer(params: DeleteAnswerParams) {
 		connectToDatabase();
 
 		const { answerId, path } = params;
+		const answer = await AnswerModel.findById(answerId);
 
-		await AnswerModel.findByIdAndDelete(answerId);
+		if (!answer) {
+			throw new Error("Could not find answer with that ID");
+		}
+
+		await AnswerModel.deleteOne({ _id: answerId });
+		await QuestionModel.updateMany(
+			{ _id: answerId },
+			{ $pull: { answers: answerId } }
+		);
 
 		revalidatePath(path);
 	} catch (error) {
