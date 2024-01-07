@@ -6,10 +6,11 @@ import {
 	AnswerVoteParams,
 	CreateAnswerParams,
 	GetAnswersParams,
+	DeleteQuestionParams,
+	DeleteAnswerParams,
 } from "./shared.types";
 import QuestionModel from "@/database/question.model";
 import { revalidatePath } from "next/cache";
-import UserModel from "@/database/user.model";
 
 export async function createAnswer(params: CreateAnswerParams) {
 	try {
@@ -104,6 +105,20 @@ export async function downVoteAnswer(params: AnswerVoteParams) {
 		if (!Answer) {
 			throw new Error("Could not find answer with that ID");
 		}
+
+		revalidatePath(path);
+	} catch (error) {
+		throw new Error("Could not find answer with that ID");
+	}
+}
+
+export async function deleteAnswer(params: DeleteAnswerParams) {
+	try {
+		connectToDatabase();
+
+		const { answerId, path } = params;
+
+		await AnswerModel.findByIdAndDelete(answerId);
 
 		revalidatePath(path);
 	} catch (error) {

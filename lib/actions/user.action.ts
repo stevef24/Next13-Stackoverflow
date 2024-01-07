@@ -8,6 +8,7 @@ import {
 	GetAllUsersParams,
 	GetSavedQuestionsParams,
 	GetUserByIdParams,
+	GetUserStatsParams,
 	ToggleSaveQuestionParams,
 	UpdateUserParams,
 } from "./shared.types";
@@ -206,6 +207,52 @@ export async function getUserInfo(params: GetUserByIdParams) {
 
 		if (!user) throw new Error("User not found");
 
-		return user;
+		return { user, questionsAsked, totalAnswers };
 	} catch (error) {}
+}
+
+export async function getUserQuestions(params: GetUserStatsParams) {
+	try {
+		connectToDatabase();
+
+		const { userId, page = 1, pageSize = 10 } = params;
+
+		const totalQuestions = await QuestionModel.countDocuments({
+			author: userId,
+		});
+
+		const userQuestions = await QuestionModel.find({ author: userId })
+			.sort({
+				views: -1,
+				upvotes: -1,
+			})
+			.populate("tags", "_id name")
+			.populate("author", "_id clerkId name picture");
+
+		return { totalQuestions, questions: userQuestions };
+	} catch (error) {
+		throw error;
+	}
+}
+
+export async function getUserAnswers(params: GetUserStatsParams) {
+	try {
+		connectToDatabase();
+
+		const { userId, page = 1, pageSize = 10 } = params;
+
+		const totalAnswers = await AnswerModel.countDocuments({
+			author: userId,
+		});
+
+		const userAnswers = await AnswerModel.find({ author: userId })
+			.sort({
+				upvotes: -1,
+			})
+			.populate("question", "_id title")
+			.populate("author", "_id clerkId name picture");
+		return { totalAnswers, answers: userAnswers };
+	} catch (error) {
+		throw new Error("Error fetching user answers");
+	}
 }

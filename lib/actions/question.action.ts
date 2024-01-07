@@ -8,6 +8,7 @@ import {
 	GetQuestionByIdParams,
 	GetQuestionsParams,
 	QuestionVoteParams,
+	DeleteQuestionParams,
 } from "./shared.types";
 import UserModel from "@/database/user.model";
 import { revalidatePath } from "next/cache";
@@ -165,6 +166,20 @@ export async function downVoteQuestion(params: QuestionVoteParams) {
 		revalidatePath(path);
 		//increment author reputation
 	} catch {
+		throw new Error("Could not find question with that ID");
+	}
+}
+
+export async function deleteQuestion(params: DeleteQuestionParams) {
+	try {
+		connectToDatabase();
+
+		const { questionId, path } = params;
+
+		await QuestionModel.findByIdAndDelete(questionId);
+
+		revalidatePath(path);
+	} catch (error) {
 		throw new Error("Could not find question with that ID");
 	}
 }
