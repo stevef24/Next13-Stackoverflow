@@ -54,13 +54,18 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
 			// make and async call to your
 			// contain all form data
 			// navigate to home page
-			await createQuestion({
-				title: data.title,
-				content: data.content,
-				tags: data.tags,
-				author: JSON.parse(mongoUserId),
-				path: path,
-			});
+
+			if (type === "edit") {
+				router.push(`/question/${parsedquestionDetails.id}`);
+			} else {
+				await createQuestion({
+					title: data.title,
+					content: data.content,
+					tags: data.tags,
+					author: JSON.parse(mongoUserId),
+					path: path,
+				});
+			}
 			form.reset();
 		} catch (err) {
 			console.log(err);
