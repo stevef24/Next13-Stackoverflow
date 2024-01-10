@@ -18,7 +18,7 @@ import React, { useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "@/context/ThemeProvider";
 
@@ -56,6 +56,12 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
 			// navigate to home page
 
 			if (type === "edit") {
+				await editQuestion({
+					questionId: parsedquestionDetails.id,
+					title: data.title,
+					content: data.content,
+					path: path,
+				});
 				router.push(`/question/${parsedquestionDetails.id}`);
 			} else {
 				await createQuestion({
@@ -205,6 +211,7 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
 							<FormControl className="mt-3.5">
 								<>
 									<Input
+										disabled={type === "Edit"}
 										placeholder="tags"
 										className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
 										onKeyDown={(e) => {
@@ -221,13 +228,15 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
 												>
 													{tag}
 
-													<Image
-														src="/assets/icons/close.svg"
-														alt={"Close icon"}
-														width={12}
-														height={12}
-														className="cursor-pointer object-contain invert-0 dark:invert"
-													/>
+													{type === "create" && (
+														<Image
+															src="/assets/icons/close.svg"
+															alt={"Close icon"}
+															width={12}
+															height={12}
+															className="cursor-pointer object-contain invert-0 dark:invert"
+														/>
+													)}
 												</Badge>
 											))}
 										</div>
@@ -248,15 +257,11 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
 					disabled={isSubmitting}
 					onClick={() => onSubmit(form.getValues())}
 				>
-					<>
-						{isSubmitting
-							? type === "edit"
-								? "Editing..."
-								: "Posting..."
-							: type === "edit"
-							? "Edit Question"
-							: "Ask a question"}
-					</>
+					{isSubmitting ? (
+						<>{type === "Edit" ? "Editing..." : "Posting..."}</>
+					) : (
+						<>{type === "Edit" ? "Edit Question" : "Ask a Question"}</>
+					)}
 				</Button>
 			</form>
 		</Form>

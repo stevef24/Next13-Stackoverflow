@@ -37,9 +37,6 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
 
 		if (!user) throw new Error("User not found");
 
-		// Find interactions for the user and group by tags...
-		// Interaction...
-
 		return [
 			{ _id: "1", name: "tag" },
 			{ _id: "2", name: "tag2" },
@@ -84,6 +81,29 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 		const questions = tag.questions;
 
 		return { tagTitle: tag.name, questions };
+	} catch (error) {
+		console.log(error);
+		throw new Error("No tags found");
+	}
+}
+
+export async function getTopTags() {
+	try {
+		connectToDatabase();
+
+		const tags = await TagModel.aggregate([
+			{
+				$project: {
+					name: true,
+					questionCount: { $size: "$questions" },
+				},
+			},
+			{ $sort: { questionCount: -1 } },
+			{ $limit: 5 },
+		]);
+
+		if (!tags) throw new Error("No tags found");
+		return tags;
 	} catch (error) {
 		console.log(error);
 		throw new Error("No tags found");

@@ -9,6 +9,7 @@ import {
 	GetQuestionsParams,
 	QuestionVoteParams,
 	DeleteQuestionParams,
+	EditQuestionParams,
 } from "./shared.types";
 import UserModel from "@/database/user.model";
 import { revalidatePath } from "next/cache";
@@ -189,5 +190,38 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
 		revalidatePath(path);
 	} catch (error) {
 		throw new Error("Could not find question with that ID");
+	}
+}
+export async function editQuestion(params: EditQuestionParams) {
+	try {
+		connectToDatabase();
+
+		const { questionId, title, content, path } = params;
+
+		const question = await QuestionModel.findById(questionId).populate("tags");
+
+		if (!question) {
+			throw new Error("Question not found");
+		}
+		question.title = title;
+		question.content = content;
+
+		await question.save();
+		revalidatePath(path);
+	} catch (error) {
+		throw new Error("Could not find question with that ID");
+	}
+}
+export async function getTopQuestions() {
+	try {
+		connectToDatabase();
+
+		const questions = await QuestionModel.find()
+			.sort({ likes: -1, views: -1 })
+			.limit(5);
+
+		return questions;
+	} catch (error) {
+		console.log(error);
 	}
 }
