@@ -3,6 +3,7 @@
 import UserModel from "@/database/user.model";
 import { connectToDatabase } from "../mongoose";
 import {
+	GetAllTagsParams,
 	GetQuestionsByTagIdParams,
 	GetTopInteractedTagsParams,
 } from "./shared.types";
@@ -13,11 +14,18 @@ import Question from "@/components/Forms/Question";
 import QuestionModel from "@/database/question.model";
 import { create } from "domain";
 
-export async function getAllTags() {
+export async function getAllTags(params: GetAllTagsParams) {
 	try {
 		connectToDatabase();
+		const { searchQuery } = params;
 
-		const tags = await TagModel.find({});
+		const query: FilterQuery<typeof TagModel> = {};
+
+		if (searchQuery) {
+			query.$or = [{ name: { $regex: new RegExp(searchQuery, "i") } }];
+		}
+
+		const tags = await TagModel.find(query);
 		if (!tags) throw new Error("No tags found");
 
 		return { tags };

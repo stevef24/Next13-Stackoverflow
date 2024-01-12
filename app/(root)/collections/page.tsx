@@ -4,9 +4,10 @@ import LocalSearchBar from "@/components/shared/LocalSearchBar";
 import NoResult from "@/components/shared/NoResult";
 import { QuestionFilters } from "@/constants/filters";
 import { getSavedQuestions } from "@/lib/actions/user.action";
+import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 
-export default async function Home() {
+export default async function Home({ searchParams }: SearchParamsProps) {
 	const { userId: clerkId } = auth();
 
 	if (!clerkId) {
@@ -14,6 +15,7 @@ export default async function Home() {
 	}
 	const results = await getSavedQuestions({
 		clerkId,
+		searchQuery: searchParams?.q,
 	});
 	return (
 		<>
