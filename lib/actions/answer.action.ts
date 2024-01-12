@@ -59,9 +59,7 @@ export async function getAllAnswers(params: GetAnswersParams) {
 		}
 		const answers = await AnswerModel.find({ question: questionId })
 			.populate("author", "_id clerkId name picture")
-			.sort(sortBy);
-
-		console.log(answers[0], "<===========");
+			.sort(sortOptions);
 		return { answers };
 	} catch (error) {
 		console.log(error);
