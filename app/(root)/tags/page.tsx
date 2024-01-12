@@ -10,13 +10,14 @@ import Link from "next/link";
 const Page = async ({ searchParams }: SearchParamsProps) => {
 	const result = await getAllTags({
 		searchQuery: searchParams.q,
+		filter: searchParams.filter?.toLowerCase(),
 	});
 
 	return (
 		<>
 			<h1 className="h1-bold text-dark100_light900">All Tags</h1>
 
-			<div className="mt-11 flex  justify-betweeen gap-5 flex-col sm:items-center">
+			<div className="mt-11  justify-between gap-5 max-w-sm:flex-col  md:flex sm:items-center ">
 				<LocalSearchBar
 					route="/"
 					iconPosition="left"
@@ -26,8 +27,8 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
 				/>
 				<Filters
 					filters={TagFilters}
-					otherClasses="min-h-[56px] sm:min-w-[170px]"
-					containerClasses="hidden max-md:flex"
+					otherClasses="mt-2 md:mt-0 min-h-[56px] sm:min-w-[170px]"
+					containerClasses=" max-md:flex"
 				/>
 			</div>
 

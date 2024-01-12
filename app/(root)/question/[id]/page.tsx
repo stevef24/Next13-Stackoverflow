@@ -98,6 +98,7 @@ const Page = async ({ params, searchParams }: any) => {
 				questionId={result._id}
 				userId={mongoUser._id}
 				totalAnswers={result.answers.length}
+				filter={searchParams?.filter?.toLowerCase()}
 			/>
 			<Answers
 				question={result.content}

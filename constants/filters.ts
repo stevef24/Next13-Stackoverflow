@@ -4,10 +4,10 @@ export type AnswerFilter = {
 };
 
 export const AnswerFilters: AnswerFilter[] = [
-	{ name: "Highest Upvotes", value: "highestUpvotes" },
-	{ name: "Lowest Upvotes", value: "lowestUpvotes" },
+	{ name: "Highest Upvotes", value: "highestupvotes" },
+	{ name: "Lowest Upvotes", value: "lowestupvotes" },
 	{ name: "Most Recent", value: "recent" },
-	{ name: "Oldest", value: "old" },
+	{ name: "Oldest", value: "oldest" },
 ];
 
 export const UserFilters: AnswerFilter[] = [
@@ -28,7 +28,7 @@ export const TagFilters: AnswerFilter[] = [
 	{ name: "Popular", value: "popular" },
 	{ name: "Most Recent", value: "recent" },
 	{ name: "Name", value: "name" },
-	{ name: "Oldest", value: "old" },
+	{ name: "Oldest", value: "oldest" },
 ];
 
 export const HomePageFilters: AnswerFilter[] = [

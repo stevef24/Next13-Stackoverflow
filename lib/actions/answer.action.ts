@@ -35,12 +35,33 @@ export async function createAnswer(params: CreateAnswerParams) {
 export async function getAllAnswers(params: GetAnswersParams) {
 	try {
 		connectToDatabase();
-		const { questionId } = params;
+		const { questionId, sortBy } = params;
 
+		let sortOptions = {};
+
+		console.log(sortBy);
+		switch (sortBy) {
+			case "highestupvotes":
+				sortOptions = { upvotes: -1 };
+				break;
+			case "lowestupvotes":
+				sortOptions = { upvotes: 1 };
+				break;
+			case "recent":
+				sortOptions = { createdAt: -1 };
+				break;
+			case "oldest":
+				sortOptions = { createdAt: 1 };
+				break;
+			default:
+				sortOptions = { createdAt: -1 };
+				break;
+		}
 		const answers = await AnswerModel.find({ question: questionId })
 			.populate("author", "_id clerkId name picture")
-			.sort({ createdAt: -1 });
+			.sort(sortBy);
 
+		console.log(answers[0], "<===========");
 		return { answers };
 	} catch (error) {
 		console.log(error);

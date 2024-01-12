@@ -16,13 +16,14 @@ export default async function Home({ searchParams }: SearchParamsProps) {
 	const results = await getSavedQuestions({
 		clerkId,
 		searchQuery: searchParams?.q,
+		filter: searchParams?.filter?.toLowerCase(),
 	});
 	return (
 		<>
 			<div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
 				<h1 className="h1-bold text-dark100_light900">Saved Questions </h1>
 			</div>
-			<div className="mt-11 flex  justify-betweeen gap-5 flex-col sm:items-center">
+			<div className="mt-11  justify-between gap-5 max-w-sm:flex-col  md:flex sm:items-center ">
 				<LocalSearchBar
 					route="/"
 					iconPosition="left"
@@ -32,35 +33,35 @@ export default async function Home({ searchParams }: SearchParamsProps) {
 				/>
 				<Filters
 					filters={QuestionFilters}
-					otherClasses="min-h-[56px] sm:min-w-[170px]"
-					containerClasses="hidden max-md:flex"
+					otherClasses="mt-2 md:mt-0 min-h-[56px] sm:min-w-[170px]"
+					containerClasses=" max-md:flex"
 				/>
-				<div className="mt-10 flex w-full flex-col gap-6">
-					{results!.questions.length > 0 ? (
-						results?.questions.map((question: QuestionProps) => (
-							<QuestionCard
-								key={question._id}
-								_id={question._id}
-								title={question.title}
-								tags={question.tags}
-								upvotes={question.upvotes}
-								author={question.author}
-								views={question.views}
-								answers={question.answers}
-								createdAt={question.createdAt}
-							/>
-						))
-					) : (
-						<NoResult
-							title="no saved questions to show"
-							description={`Be the first to break the silence! 🚀 Ask a Question and kickstart the
+			</div>
+			<div className="mt-10 flex w-full flex-col gap-6">
+				{results!.questions.length > 0 ? (
+					results?.questions.map((question: QuestionProps) => (
+						<QuestionCard
+							key={question._id}
+							_id={question._id}
+							title={question.title}
+							tags={question.tags}
+							upvotes={question.upvotes}
+							author={question.author}
+							views={question.views}
+							answers={question.answers}
+							createdAt={question.createdAt}
+						/>
+					))
+				) : (
+					<NoResult
+						title="no saved questions to show"
+						description={`Be the first to break the silence! 🚀 Ask a Question and kickstart the
 				discussion. our query could be the next big thing others learn from. Get
 				involved! 💡`}
-							link="/ask-questions"
-							buttonTitle="Ask a question"
-						/>
-					)}
-				</div>
+						link="/ask-questions"
+						buttonTitle="Ask a question"
+					/>
+				)}
 			</div>
 		</>
 	);
