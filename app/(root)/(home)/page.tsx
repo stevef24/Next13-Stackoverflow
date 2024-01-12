@@ -24,7 +24,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
 					</Button>
 				</Link>
 			</div>
-			<div className="mt-11  justify-betweeen gap-5 flex sm:items-center">
+			<div className="mt-11  justify-between gap-5 max-w-sm:flex-col  md:flex sm:items-center ">
 				<LocalSearchBar
 					route="/"
 					iconPosition="left"
@@ -34,8 +34,8 @@ export default async function Home({ searchParams }: SearchParamsProps) {
 				/>
 				<Filters
 					filters={HomePageFilters}
-					otherClasses="min-h-[56px] sm:min-w-[170px]"
-					containerClasses="max-md:flex"
+					otherClasses="mt-2 md:mt-0 min-h-[56px] sm:min-w-[170px]"
+					containerClasses=" max-md:flex"
 				/>
 			</div>
 			<div className="mt-10 flex w-full flex-col gap-6">

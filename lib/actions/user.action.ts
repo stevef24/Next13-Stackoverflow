@@ -22,7 +22,7 @@ import AnswerModel from "@/database/answer.model";
 export async function getAllUsers(params: GetAllUsersParams) {
 	try {
 		connectToDatabase();
-		const { searchQuery } = params;
+		const { searchQuery, filter } = params;
 
 		const query: FilterQuery<typeof UserModel> = {};
 		if (searchQuery) {
@@ -31,7 +31,25 @@ export async function getAllUsers(params: GetAllUsersParams) {
 				{ username: { $regex: new RegExp(searchQuery, "i") } },
 			];
 		}
-		const users = await UserModel.find(query);
+		let sortOptions = {};
+
+		switch (filter) {
+			case "new_users":
+				sortOptions = { joinedAt: -1 };
+				break;
+			case "old_users":
+				sortOptions = { joinedAt: 1 };
+				break;
+			case "top_contributors":
+				sortOptions = { questionsAsked: -1 };
+				break;
+			default:
+				sortOptions = { joinedAt: -1 };
+				break;
+		}
+
+		const users = await UserModel.find(query).sort(sortOptions);
+
 		if (!users) throw new Error("No users found");
 
 		return { users };
