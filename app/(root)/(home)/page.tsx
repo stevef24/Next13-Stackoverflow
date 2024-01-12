@@ -11,6 +11,7 @@ import Link from "next/link";
 export default async function Home({ searchParams }: SearchParamsProps) {
 	const results = await getQuestions({
 		searchQuery: searchParams?.q,
+		filter: searchParams?.filter?.toLowerCase(),
 	});
 
 	return (
@@ -23,7 +24,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
 					</Button>
 				</Link>
 			</div>
-			<div className="mt-11 flex  justify-betweeen gap-5 flex-col sm:items-center">
+			<div className="mt-11  justify-betweeen gap-5 flex sm:items-center">
 				<LocalSearchBar
 					route="/"
 					iconPosition="left"
@@ -34,33 +35,33 @@ export default async function Home({ searchParams }: SearchParamsProps) {
 				<Filters
 					filters={HomePageFilters}
 					otherClasses="min-h-[56px] sm:min-w-[170px]"
-					containerClasses="hidden max-md:flex"
+					containerClasses="max-md:flex"
 				/>
-				<div className="mt-10 flex w-full flex-col gap-6">
-					{results!.questions.length > 0 ? (
-						results?.questions.map((question) => (
-							<QuestionCard
-								key={question._id}
-								_id={question._id}
-								title={question.title}
-								tags={question.tags}
-								upvotes={question.upvotes}
-								author={question.author}
-								views={question.views}
-								answers={question.answers}
-								createdAt={question.createdAt}
-							/>
-						))
-					) : (
-						<NoResult
-							title={`Be the first to break the silence! 🚀 Ask a Question and kickstart the
+			</div>
+			<div className="mt-10 flex w-full flex-col gap-6">
+				{results!.questions.length > 0 ? (
+					results?.questions.map((question) => (
+						<QuestionCard
+							key={question._id}
+							_id={question._id}
+							title={question.title}
+							tags={question.tags}
+							upvotes={question.upvotes}
+							author={question.author}
+							views={question.views}
+							answers={question.answers}
+							createdAt={question.createdAt}
+						/>
+					))
+				) : (
+					<NoResult
+						title={`Be the first to break the silence! 🚀 Ask a Question and kickstart the
 				discussion. our query could be the next big thing others learn from. Get
 				involved! 💡`}
-							link="/ask-questions"
-							buttonTitle="Ask a question"
-						/>
-					)}
-				</div>
+						link="/ask-questions"
+						buttonTitle="Ask a question"
+					/>
+				)}
 			</div>
 		</>
 	);
