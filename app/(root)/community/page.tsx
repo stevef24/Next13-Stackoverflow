@@ -4,9 +4,12 @@ import Link from "next/link";
 import LocalSearchBar from "@/components/shared/LocalSearchBar";
 import UserCard from "@/components/Cards/UserCard";
 import Filters from "@/components/shared/Filters";
+import { SearchParamsProps } from "@/types";
 
-const Page = async () => {
-	const result = await getAllUsers({});
+const Page = async ({ searchParams }: SearchParamsProps) => {
+	const result = await getAllUsers({
+		searchQuery: searchParams.q,
+	});
 
 	return (
 		<>

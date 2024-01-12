@@ -22,8 +22,16 @@ import AnswerModel from "@/database/answer.model";
 export async function getAllUsers(params: GetAllUsersParams) {
 	try {
 		connectToDatabase();
+		const { searchQuery } = params;
 
-		const users = await UserModel.find({});
+		const query: FilterQuery<typeof UserModel> = {};
+		if (searchQuery) {
+			query.$or = [
+				{ name: { $regex: new RegExp(searchQuery, "i") } },
+				{ username: { $regex: new RegExp(searchQuery, "i") } },
+			];
+		}
+		const users = await UserModel.find(query);
 		if (!users) throw new Error("No users found");
 
 		return { users };

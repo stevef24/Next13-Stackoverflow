@@ -36,7 +36,6 @@ const LocalSearchBar = ({
 					key: "q",
 					value: search,
 				});
-				console.log(newUrl);
 				router.push(newUrl, { scroll: false });
 			} else {
 				if (pathName === route) {
