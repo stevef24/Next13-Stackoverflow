@@ -6,7 +6,6 @@ import {
 	AnswerVoteParams,
 	CreateAnswerParams,
 	GetAnswersParams,
-	DeleteQuestionParams,
 	DeleteAnswerParams,
 } from "./shared.types";
 import QuestionModel from "@/database/question.model";
@@ -39,7 +38,6 @@ export async function getAllAnswers(params: GetAnswersParams) {
 
 		let sortOptions = {};
 
-		console.log(sortBy);
 		switch (sortBy) {
 			case "highestupvotes":
 				sortOptions = { upvotes: -1 };

@@ -29,13 +29,13 @@ export async function getAllTags(params: GetAllTagsParams) {
 
 		switch (filter) {
 			case "popular":
-				sortOptions = { questionCount: -1 };
+				sortOptions = { questions: -1 };
 				break;
 			case "recent":
 				sortOptions = { createdAt: -1 };
 				break;
 			case "name":
-				sortOptions = { name: 1 };
+				sortOptions = { name: -1 };
 				break;
 			case "oldest":
 				sortOptions = { createdAt: 1 };
