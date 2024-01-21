@@ -2,6 +2,7 @@ import QuestionCard from "@/components/Cards/QuestionCard";
 import Filters from "@/components/shared/Filters";
 import LocalSearchBar from "@/components/shared/LocalSearchBar";
 import NoResult from "@/components/shared/NoResult";
+import Pagination from "@/components/ui/PaginationSearch";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
 import { getQuestions } from "@/lib/actions/question.action";
@@ -12,6 +13,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
 	const results = await getQuestions({
 		searchQuery: searchParams?.q,
 		filter: searchParams?.filter?.toLowerCase(),
+		page: searchParams.page ? +searchParams.page : 1,
 	});
 
 	return (

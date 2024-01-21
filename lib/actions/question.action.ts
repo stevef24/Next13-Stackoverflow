@@ -21,7 +21,11 @@ export async function getQuestions(params: GetQuestionsParams) {
 	try {
 		connectToDatabase();
 
-		const { searchQuery, filter } = params;
+		const { searchQuery, filter, page = 1, pageSize = 2 } = params;
+
+		//calculate the number of documents to skip
+
+		const skip = (page - 1) * pageSize;
 
 		const query: FilterQuery<typeof QuestionModel> = {};
 
@@ -54,8 +58,15 @@ export async function getQuestions(params: GetQuestionsParams) {
 				model: TagModel,
 			})
 			.populate({ path: "author", model: UserModel })
+			.skip(skip)
+			.limit(pageSize)
 			.sort(filter);
-		return { questions };
+
+		const totalQuestions = await QuestionModel.countDocuments(query);
+
+		const isNextPage = totalQuestions > skip + questions.length;
+
+		return { questions, isNextPage };
 	} catch (error) {
 		console.log(error);
 	}

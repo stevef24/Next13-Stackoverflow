@@ -22,7 +22,9 @@ import AnswerModel from "@/database/answer.model";
 export async function getAllUsers(params: GetAllUsersParams) {
 	try {
 		connectToDatabase();
-		const { searchQuery, filter } = params;
+		const { searchQuery, filter, page = 1, pageSize = 2 } = params;
+
+		const skip = (page - 1) * pageSize;
 
 		const query: FilterQuery<typeof UserModel> = {};
 		if (searchQuery) {
@@ -48,11 +50,17 @@ export async function getAllUsers(params: GetAllUsersParams) {
 				break;
 		}
 
-		const users = await UserModel.find(query).sort(sortOptions);
+		const users = await UserModel.find(query)
+			.sort(sortOptions)
+			.skip(skip)
+			.limit(pageSize);
+
+		const totalUsers = await UserModel.countDocuments(query);
+		const isNextPage = totalUsers > skip + users.length;
 
 		if (!users) throw new Error("No users found");
 
-		return { users };
+		return { users, isNextPage };
 	} catch (error) {
 		console.log(error);
 		throw error;
