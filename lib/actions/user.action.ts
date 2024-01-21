@@ -22,7 +22,7 @@ import AnswerModel from "@/database/answer.model";
 export async function getAllUsers(params: GetAllUsersParams) {
 	try {
 		connectToDatabase();
-		const { searchQuery, filter, page = 1, pageSize = 2 } = params;
+		const { searchQuery, filter, page = 1, pageSize = 1 } = params;
 
 		const skip = (page - 1) * pageSize;
 
@@ -162,11 +162,11 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
 
 		const { clerkId, searchQuery, filter, page = 1, pageSize = 20 } = params;
 
+		const skip = (page - 1) * pageSize;
+
 		const query: FilterQuery<typeof Question> = searchQuery
 			? { title: { $regex: new RegExp(searchQuery, "i") } }
 			: {};
-
-		const skipAmount = (page - 1) * pageSize;
 
 		let sortOptions = {};
 
@@ -196,7 +196,7 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
 			match: query,
 			options: {
 				sort: sortOptions,
-				skip: skipAmount,
+				skip: skip,
 				limit: pageSize + 1,
 			},
 			populate: [
