@@ -29,10 +29,12 @@ const QuestionTab = async ({ searchParams, userId, clerkId }: Props) => {
 					createdAt={question.createdAt}
 				/>
 			))}
-			<Pagination
-				pageNumber={searchParams?.page ? +searchParams.page : 1}
-				isNextPage={userQuestion?.isNextPage || false}
-			/>
+			<div className="mt-10">
+				<Pagination
+					pageNumber={searchParams?.page ? +searchParams.page : 1}
+					isNextPage={userQuestion?.isNextPage || false}
+				/>
+			</div>
 		</>
 	);
 };

@@ -9,7 +9,10 @@ interface Props extends SearchParamsProps {
 	clerkId: string | null;
 }
 const AnswersTab = async ({ searchParams, userId, clerkId }: Props) => {
-	const userAnswer = await getUserAnswers({ userId });
+	const userAnswer = await getUserAnswers({
+		userId,
+		page: searchParams.page ? +searchParams.page : 1,
+	});
 
 	return (
 		<>
@@ -20,17 +23,18 @@ const AnswersTab = async ({ searchParams, userId, clerkId }: Props) => {
 						_id={answer.id}
 						question={answer.question}
 						author={answer.author}
-						upvotes={answer.upvotes}
+						upvotes={answer.upvotes.length}
 						createdAt={answer.createdAt}
 						clerkId={clerkId}
 					/>
 				);
 			})}
-
-			<Pagination
-				pageNumber={searchParams?.page ? +searchParams.page : 1}
-				isNextPage={userAnswer?.isNextPage || false}
-			/>
+			<div className="mt-10">
+				<Pagination
+					pageNumber={searchParams?.page ? +searchParams.page : 1}
+					isNextPage={userAnswer?.isNextPage || false}
+				/>
+			</div>
 		</>
 	);
 };

@@ -1,4 +1,5 @@
-"use server";
+import { Question } from "./../../types/index.d";
+("use server");
 
 import AnswerModel from "@/database/answer.model";
 import { connectToDatabase } from "../mongoose";
@@ -34,7 +35,9 @@ export async function createAnswer(params: CreateAnswerParams) {
 export async function getAllAnswers(params: GetAnswersParams) {
 	try {
 		connectToDatabase();
-		const { questionId, sortBy } = params;
+		const { questionId, sortBy, page = 1, pageSize = 10 } = params;
+
+		const skip = (page - 1) * pageSize;
 
 		let sortOptions = {};
 
@@ -56,9 +59,16 @@ export async function getAllAnswers(params: GetAnswersParams) {
 				break;
 		}
 		const answers = await AnswerModel.find({ question: questionId })
+			.skip(skip)
+			.limit(pageSize)
 			.populate("author", "_id clerkId name picture")
 			.sort(sortOptions);
-		return { answers };
+
+		const totalAnswersCount = await AnswerModel.countDocuments({
+			question: questionId,
+		});
+		const isNextPage = totalAnswersCount > skip + answers.length;
+		return { answers, isNextPage };
 	} catch (error) {
 		console.log(error);
 		throw error;
