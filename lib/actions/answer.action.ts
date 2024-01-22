@@ -1,5 +1,4 @@
-import { Question } from "./../../types/index.d";
-("use server");
+"use server";
 
 import AnswerModel from "@/database/answer.model";
 import { connectToDatabase } from "../mongoose";
