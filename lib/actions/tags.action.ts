@@ -17,7 +17,9 @@ import { create } from "domain";
 export async function getAllTags(params: GetAllTagsParams) {
 	try {
 		connectToDatabase();
-		const { searchQuery, filter } = params;
+		const { searchQuery, filter, pageSize = 20, page = 1 } = params;
+
+		const skip = (page - 1) * pageSize;
 
 		const query: FilterQuery<typeof TagModel> = {};
 
@@ -45,10 +47,16 @@ export async function getAllTags(params: GetAllTagsParams) {
 				break;
 		}
 
-		const tags = await TagModel.find(query).sort(sortOptions);
+		const tags = await TagModel.find(query)
+			.skip(skip)
+			.limit(pageSize)
+			.sort(sortOptions);
+
+		const totalTags = await TagModel.countDocuments(query);
+		const isNextPage = totalTags > skip + tags.length;
 		if (!tags) throw new Error("No tags found");
 
-		return { tags };
+		return { tags, isNextPage };
 	} catch (error) {
 		console.log(error);
 		throw new Error("No tags found");
@@ -82,6 +90,8 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 
 		const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
+		const skip = (page - 1) * pageSize;
+
 		const tag = await TagModel.findOne(tagFilter).populate({
 			path: "questions",
 			model: QuestionModel,
@@ -90,6 +100,8 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 				: {},
 			options: {
 				sort: { createdAt: -1 },
+				skip,
+				limit: pageSize + 1,
 			},
 			populate: [
 				{ path: "tags", model: TagModel, select: "_id name" },
@@ -100,7 +112,6 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 				},
 			],
 		});
-		console.log(tag);
 
 		if (!tag) {
 			throw new Error("tag not found");
@@ -108,7 +119,9 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 
 		const questions = tag.questions;
 
-		return { tagTitle: tag.name, questions };
+		const isNextPage = tag.questions.length > pageSize;
+
+		return { tagTitle: tag.name, questions, isNextPage };
 	} catch (error) {
 		console.log(error);
 		throw new Error("No tags found");

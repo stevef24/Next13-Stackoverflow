@@ -250,7 +250,9 @@ export async function getUserQuestions(params: GetUserStatsParams) {
 	try {
 		connectToDatabase();
 
-		const { userId, page = 1, pageSize = 10 } = params;
+		const { userId, page = 1, pageSize = 1 } = params;
+
+		const skip = (page - 1) * pageSize;
 
 		const totalQuestions = await QuestionModel.countDocuments({
 			author: userId,
@@ -261,10 +263,18 @@ export async function getUserQuestions(params: GetUserStatsParams) {
 				views: -1,
 				upvotes: -1,
 			})
+			.skip(skip)
+			.limit(pageSize)
 			.populate("tags", "_id name")
 			.populate("author", "_id clerkId name picture");
 
-		return { totalQuestions, questions: userQuestions };
+		const totalUserQuestions = await QuestionModel.countDocuments({
+			author: userId,
+		});
+
+		const isNextPage = totalUserQuestions > skip + userQuestions.length;
+
+		return { totalQuestions, questions: userQuestions, isNextPage };
 	} catch (error) {
 		throw error;
 	}
@@ -274,7 +284,9 @@ export async function getUserAnswers(params: GetUserStatsParams) {
 	try {
 		connectToDatabase();
 
-		const { userId, page = 1, pageSize = 10 } = params;
+		const { userId, page = 1, pageSize = 1 } = params;
+
+		const skip = (page - 1) * pageSize;
 
 		const totalAnswers = await AnswerModel.countDocuments({
 			author: userId,
@@ -284,9 +296,17 @@ export async function getUserAnswers(params: GetUserStatsParams) {
 			.sort({
 				upvotes: -1,
 			})
+			.skip(skip)
+			.limit(pageSize)
 			.populate("question", "_id title")
 			.populate("author", "_id clerkId name picture");
-		return { totalAnswers, answers: userAnswers };
+
+		const totalUserAnswers = await AnswerModel.countDocuments({
+			author: userId,
+		});
+
+		const isNextPage = totalUserAnswers > skip + userAnswers.length;
+		return { totalAnswers, answers: userAnswers, isNextPage };
 	} catch (error) {
 		throw new Error("Error fetching user answers");
 	}
