@@ -4,6 +4,8 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import GlobalFilters from "./GlobalFilters";
+import { globalSearch } from "@/lib/actions/general.action";
 
 const GlobalSearchResults = () => {
 	const searchParams = useSearchParams();
@@ -23,6 +25,9 @@ const GlobalSearchResults = () => {
 			setIsLoading(true);
 
 			try {
+				const res = await globalSearch({ query: global, type: type });
+
+				setResults(JSON.parse(res));
 			} catch (err) {
 				console.log(err);
 				throw new Error();
@@ -30,14 +35,29 @@ const GlobalSearchResults = () => {
 				setIsLoading(false);
 			}
 		};
+
+		if (global) {
+			fetchResults();
+		}
 	}, [global, type]);
 
 	const renderLink = (type: string, id: string) => {
-		return "";
+		switch (type) {
+			case "question":
+				return `/question/${id}`;
+			case "tag":
+				return `/tag/${id}`;
+			case "user":
+				return `/user/${id}`;
+			case "answer":
+				return `/question/${id}`;
+			default:
+				return "/";
+		}
 	};
 	return (
 		<div className="absolute top-full z-10 mt-3 w-full bg-light-800 py-5 shadow-sm dark:bg-dark-400 rounded-xl">
-			Filters
+			<GlobalFilters />
 			<div className="my-5 h-[1px] bg-light-700/50 dark:bg-dark-500/50 " />
 			<div className="space-y-5">
 				<p className="text-dark400_light900 paragraph-semibold px-5">
@@ -57,9 +77,9 @@ const GlobalSearchResults = () => {
 							results.map((item: any, index: number) => {
 								return (
 									<Link
-										href={renderLink("type", "id")}
+										href={renderLink(item.type, item.id)}
 										key={item.type + item.id}
-										className=""
+										className="flex w-full cursor-pointer items-start gap-3 px-5 py-2.5 hover:bg-light-700/50 dark:hover:bg-dark-500/50 "
 									>
 										<Image
 											src="/assets/icons/tag.svg"

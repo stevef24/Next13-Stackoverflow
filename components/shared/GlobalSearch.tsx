@@ -15,7 +15,7 @@ const GlobalSearch = () => {
 	const query = searchParams.get("global");
 
 	const [search, setSearch] = useState(query || "");
-	const [isOpen, setIsOpen] = useState(true);
+	const [isOpen, setIsOpen] = useState(false);
 
 	useEffect(() => {
 		const delayDebounceFn = setTimeout(() => {
