@@ -21,9 +21,7 @@ export async function getQuestions(params: GetQuestionsParams) {
 	try {
 		connectToDatabase();
 
-		const { searchQuery, filter, page = 1, pageSize = 2 } = params;
-
-		//calculate the number of documents to skip
+		const { searchQuery, filter, page = 1, pageSize = 10 } = params;
 
 		const skip = (page - 1) * pageSize;
 
@@ -60,7 +58,7 @@ export async function getQuestions(params: GetQuestionsParams) {
 			.populate({ path: "author", model: UserModel })
 			.skip(skip)
 			.limit(pageSize)
-			.sort(filter);
+			.sort(sortQuery);
 
 		const totalQuestions = await QuestionModel.countDocuments(query);
 
@@ -106,7 +104,17 @@ export async function createQuestion(params: CreateQuestionParams) {
 
 		// create an interaction record for the user ask question action
 
+		await InteractionModel.create({
+			user: author,
+			question: question._id,
+			tags: tagDocuments,
+			action: "ask_question",
+		});
+
 		// increment author reputation by +5 points for creating a question
+		await UserModel.findByIdAndUpdate(author, {
+			$inc: { reputation: 5 },
+		});
 
 		revalidatePath(path);
 	} catch (error) {
@@ -169,6 +177,16 @@ export async function upVoteQuestion(params: QuestionVoteParams) {
 		}
 
 		//increment author reputation
+		await UserModel.findByIdAndUpdate(userId, {
+			$inc: { reputation: hasupVoted ? -1 : 1 },
+		});
+
+		//increament user reputation for receiving an upvote or downvote
+
+		await UserModel.findByIdAndUpdate(question.author, {
+			$inc: { reputation: hasupVoted ? -10 : 10 },
+		});
+
 		revalidatePath(path);
 	} catch {
 		throw new Error("Could not find question with that ID");
@@ -205,8 +223,17 @@ export async function downVoteQuestion(params: QuestionVoteParams) {
 			throw new Error("Could not find question with that ID");
 		}
 
+		await UserModel.findByIdAndUpdate(userId, {
+			$inc: { reputation: hasdownVoted ? -1 : 1 },
+		});
+
+		//increament user reputation for receiving an upvote or downvote
+
+		await UserModel.findByIdAndUpdate(question.author, {
+			$inc: { reputation: hasdownVoted ? -10 : 10 },
+		});
+
 		revalidatePath(path);
-		//increment author reputation
 	} catch {
 		throw new Error("Could not find question with that ID");
 	}

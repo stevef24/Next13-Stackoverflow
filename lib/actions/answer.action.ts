@@ -10,6 +10,8 @@ import {
 } from "./shared.types";
 import QuestionModel from "@/database/question.model";
 import { revalidatePath } from "next/cache";
+import InteractionModel from "@/database/interaction.model";
+import UserModel from "@/database/user.model";
 
 export async function createAnswer(params: CreateAnswerParams) {
 	try {
@@ -19,9 +21,20 @@ export async function createAnswer(params: CreateAnswerParams) {
 
 		const newAnswer = await AnswerModel.create({ content, author, question });
 
-		// Add the answer to the question's answers array
 		const questionObject = await QuestionModel.findByIdAndUpdate(question, {
 			$push: { answers: newAnswer._id },
+		});
+
+		await InteractionModel.create({
+			user: author,
+			question: question,
+			action: "answer",
+			answer: newAnswer._id,
+			tags: questionObject.tags,
+		});
+
+		await UserModel.findByIdAndUpdate(author, {
+			$inc: { reputation: 10 },
 		});
 
 		revalidatePath(path);
@@ -99,6 +112,18 @@ export async function upVoteAnswer(params: AnswerVoteParams) {
 		if (!Answer) {
 			throw new Error("Could not find answer with that ID");
 		}
+		console.log(userId);
+
+		await UserModel.findByIdAndUpdate(userId, {
+			$inc: { reputation: hasupVoted ? -2 : 2 },
+		});
+
+		await UserModel.findOneAndUpdate(
+			{ _id: Answer.author },
+			{
+				$inc: { reputation: hasupVoted ? -2 : 2 },
+			}
+		);
 
 		revalidatePath(path);
 	} catch (error) {
@@ -131,6 +156,17 @@ export async function downVoteAnswer(params: AnswerVoteParams) {
 		if (!Answer) {
 			throw new Error("Could not find answer with that ID");
 		}
+
+		await UserModel.findByIdAndUpdate(userId, {
+			$inc: { reputation: hasdownVoted ? -2 : 2 },
+		});
+
+		await UserModel.findOneAndUpdate(
+			{ _id: Answer.author },
+			{
+				$inc: { reputation: hasdownVoted ? -2 : 2 },
+			}
+		);
 
 		revalidatePath(path);
 	} catch (error) {

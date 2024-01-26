@@ -44,7 +44,7 @@ export async function globalSearch(params: SearchParams) {
 						type,
 						id:
 							type === "user"
-								? item.clerkid
+								? item.clerkId
 								: type === "answer"
 								? item.question
 								: item._id,
@@ -64,21 +64,24 @@ export async function globalSearch(params: SearchParams) {
 				.find({ [modelInfo.searchField]: regexQuery })
 				.limit(8);
 
-			results = queryResults.map((item) => ({
-				title:
-					type === "answer"
-						? `Answers containing ${query}`
-						: item[modelInfo.searchField],
-				type,
-				id:
-					type === "user"
-						? item.clerkId
-						: type === "answer"
-						? item.question
-						: item._id,
-			}));
-		}
+			console.log({ queryResults });
 
+			results = queryResults.map((item) => {
+				return {
+					title:
+						type === "answer"
+							? `Answers containing ${query}`
+							: item[modelInfo.searchField],
+					type,
+					id:
+						type === "user"
+							? item.clerkId
+							: type === "answer"
+							? item.question
+							: item._id,
+				};
+			});
+		}
 		return JSON.stringify(results);
 	} catch (error) {
 		console.log(`Error fetching global results, ${error}`);

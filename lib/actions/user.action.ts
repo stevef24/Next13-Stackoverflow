@@ -250,7 +250,7 @@ export async function getUserQuestions(params: GetUserStatsParams) {
 	try {
 		connectToDatabase();
 
-		const { userId, page = 1, pageSize = 1 } = params;
+		const { userId, page = 1, pageSize = 10 } = params;
 
 		const skip = (page - 1) * pageSize;
 
@@ -260,6 +260,7 @@ export async function getUserQuestions(params: GetUserStatsParams) {
 
 		const userQuestions = await QuestionModel.find({ author: userId })
 			.sort({
+				createdAt: -1,
 				views: -1,
 				upvotes: -1,
 			})
