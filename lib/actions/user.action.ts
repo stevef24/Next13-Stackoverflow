@@ -18,6 +18,8 @@ import TagModel from "@/database/tag.model";
 import { FilterQuery } from "mongoose";
 import Question from "@/components/Forms/Question";
 import AnswerModel from "@/database/answer.model";
+import { BadgeCriteriaType } from "@/types";
+import { assignBadges } from "../utils";
 
 export async function getAllUsers(params: GetAllUsersParams) {
 	try {
@@ -240,10 +242,46 @@ export async function getUserInfo(params: GetUserByIdParams) {
 			author: user._id,
 		});
 
-		if (!user) throw new Error("User not found");
+		const [questionUpvotes] = await QuestionModel.aggregate([
+			{ $match: { author: user._id } },
+			{ $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
+			{ $group: { _id: null, totalUpvotes: { $sum: "$upvotes" } } },
+		]);
+		const [answerUpvotes] = await AnswerModel.aggregate([
+			{ $match: { author: user._id } },
+			{ $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
+			{ $group: { _id: null, totalUpvotes: { $sum: "$upvotes" } } },
+		]);
+		const [questionViews] = await AnswerModel.aggregate([
+			{ $match: { author: user._id } },
+			{ $group: { _id: null, totalViews: { $sum: "$views" } } },
+		]);
 
-		return { user, questionsAsked, totalAnswers };
-	} catch (error) {}
+		if (!user) throw new Error("User not found");
+		const criteria = [
+			{ type: "QUESTION_COUNT" as BadgeCriteriaType, count: questionsAsked },
+			{ type: "ANSWER_COUNT" as BadgeCriteriaType, count: totalAnswers },
+			{
+				type: "QUESTION_UPVOTES" as BadgeCriteriaType,
+				count: questionUpvotes?.totalUpvotes || 0,
+			},
+			{
+				type: "ANSWER_UPVOTES" as BadgeCriteriaType,
+				count: answerUpvotes?.totalUpvotes || 0,
+			},
+			{
+				type: "TOTAL_VIEWS" as BadgeCriteriaType,
+				count: questionViews?.totalUpvotes || 0,
+			},
+		];
+
+		const badgeCount = assignBadges({ criteria });
+
+		return { user, questionsAsked, totalAnswers, badgeCount };
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
 }
 
 export async function getUserQuestions(params: GetUserStatsParams) {

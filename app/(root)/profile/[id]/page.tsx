@@ -18,6 +18,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
 
 	const userInfo = await getUserInfo({ userId: params.id });
 	if (!userInfo) return null;
+	``;
 	return (
 		<>
 			<div className="flex flex-col-reverse items-start justify-between sm:flex-row">
@@ -84,8 +85,8 @@ const Page = async ({ params, searchParams }: URLProps) => {
 			<Stats
 				totalQuestions={userInfo.questionsAsked}
 				totalAnswers={userInfo.totalAnswers}
-				badges={userInfo.user.badgeCounts}
-				reputation={0}
+				badges={userInfo.badgeCount}
+				reputation={userInfo.user.reputation}
 			/>
 			<div className="mt-10 flex gap-10">
 				<Tabs defaultValue="top-posts" className="flex-1">
