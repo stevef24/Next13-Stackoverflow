@@ -52,10 +52,6 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
 		setIsSubmitting(true);
 
 		try {
-			// make and async call to your
-			// contain all form data
-			// navigate to home page
-
 			if (type === "edit") {
 				await editQuestion({
 					questionId: parsedquestionDetails.id,

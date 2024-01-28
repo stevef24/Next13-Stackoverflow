@@ -2,8 +2,6 @@
 import { AnswerFilter } from "@/constants/filters";
 import { Button } from "../ui/button";
 import React, { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { formUrlQuery } from "@/lib/utils";
 
 type HomeFiltersProps = {
 	filters: AnswerFilter[];

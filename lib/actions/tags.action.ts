@@ -8,11 +8,8 @@ import {
 	GetTopInteractedTagsParams,
 } from "./shared.types";
 import TagModel, { ITag } from "@/database/tag.model";
-import { getQuestionByID } from "./question.action";
 import { FilterQuery } from "mongoose";
-import Question from "@/components/Forms/Question";
 import QuestionModel from "@/database/question.model";
-import { create } from "domain";
 
 export async function getAllTags(params: GetAllTagsParams) {
 	try {

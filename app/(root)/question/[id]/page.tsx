@@ -16,7 +16,6 @@ const Page = async ({ params, searchParams }: any) => {
 
 	let mongoUser;
 
-	//check if this user exist and then find it in mongo
 	if (clerkId) {
 		mongoUser = await getUserById({ userId: clerkId });
 	}

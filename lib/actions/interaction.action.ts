@@ -10,10 +10,8 @@ export async function viewQuestions(params: ViewQuestionParams) {
 		connectToDatabase();
 		const { questionId, userId } = params;
 
-		//update view count for the question
 		await QuestionModel.findByIdAndUpdate(questionId, { $inc: { views: 1 } });
 
-		//check whether the user has already viewed the question
 		if (userId) {
 			const existingInteraction = await InteractionModel.findOne({
 				user: userId,

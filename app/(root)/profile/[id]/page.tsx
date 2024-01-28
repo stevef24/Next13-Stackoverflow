@@ -18,7 +18,6 @@ const Page = async ({ params, searchParams }: URLProps) => {
 
 	const userInfo = await getUserInfo({ userId: params.id });
 	if (!userInfo) return null;
-	``;
 	return (
 		<>
 			<div className="flex flex-col-reverse items-start justify-between sm:flex-row">

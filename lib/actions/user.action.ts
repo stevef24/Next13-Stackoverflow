@@ -106,24 +106,27 @@ export async function updateUser(userParams: UpdateUserParams) {
 	} catch (error) {}
 }
 
-export async function deleteUser(userParams: DeleteUserParams) {
-	const { clerkId } = userParams;
+export async function deleteUser(params: DeleteUserParams) {
+	try {
+		connectToDatabase();
 
-	const user = await UserModel.findOneAndDelete({ clerkId });
+		const { clerkId } = params;
 
-	if (!user) {
-		throw new Error("User not found");
+		const user = await UserModel.findOneAndDelete({ clerkId });
+
+		if (!user) {
+			throw new Error("User not found");
+		}
+
+		await QuestionModel.deleteMany({ author: user._id });
+
+		const deletedUser = await UserModel.findByIdAndDelete(user._id);
+
+		return deletedUser;
+	} catch (error) {
+		console.log(error);
+		throw error;
 	}
-
-	// const userQuestionIds = await QuestionModel.find({
-	// 	author: user._id,
-	// }).distinct("_id");
-
-	await QuestionModel.deleteMany({ author: user._id });
-
-	// TODO delete all user answers , comments and replies
-
-	// const deletedUser = await UserModel.findByIdAndDelete(user._id);
 }
 
 export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
@@ -233,7 +236,6 @@ export async function getUserInfo(params: GetUserByIdParams) {
 		const { userId } = params;
 
 		const user = await UserModel.findOne({ clerkId: userId });
-		//find out how many questions the user has asked
 
 		const questionsAsked = await QuestionModel.countDocuments({
 			author: user._id,
@@ -279,7 +281,6 @@ export async function getUserInfo(params: GetUserByIdParams) {
 
 		return { user, questionsAsked, totalAnswers, badgeCount };
 	} catch (error) {
-		console.log(error);
 		throw error;
 	}
 }
