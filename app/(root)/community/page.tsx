@@ -31,7 +31,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
 					containerClasses=" max-md:flex"
 				/>
 			</div>
-			<div className="mt-12 flex flex-wrap gap-4">
+			<div className="mt-12 flex flex-wrap gap-4 justify-center items-center">
 				{result.users.length > 0 ? (
 					result.users.map((user) => <UserCard key={user._id} user={user} />)
 				) : (

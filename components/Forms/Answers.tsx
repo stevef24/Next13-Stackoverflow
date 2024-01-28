@@ -19,6 +19,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { createAnswer } from "@/lib/actions/answer.action";
 import { usePathname } from "next/navigation";
+import { toast } from "../ui/use-toast";
 
 interface Props {
 	authorId: string;
@@ -54,8 +55,15 @@ const Answers = ({ authorId, question, questionId }: Props) => {
 				const editor = editorRef.current as any;
 				editor.setContent("");
 			}
+			return toast({
+				title: "Answer submitted",
+				description: "Your answer has been submitted successfully",
+			});
 		} catch (error) {
-			throw Error("could not create answer");
+			return toast({
+				title: "Failed to submit answer",
+				variant: "destructive",
+			});
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -186,7 +194,7 @@ const Answers = ({ authorId, question, questionId }: Props) => {
 					<div className="flex justify-end">
 						<Button
 							type="submit"
-							className="primary-gradient w-fit"
+							className="primary-gradient w-fit text-dark400_light800"
 							disabled={isSubmitting}
 						>
 							{isSubmitting ? "Submitting..." : "Submit"}

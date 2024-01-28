@@ -11,6 +11,7 @@ import { formatNumber } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { toast } from "../ui/use-toast";
 
 interface Props {
 	type: string;
@@ -45,7 +46,10 @@ const Votes = ({
 
 	const handleVote = async (action: string) => {
 		if (!userId) {
-			return;
+			return toast({
+				title: "please log in",
+				description: "You need to be logged in to vote",
+			});
 		}
 
 		if (action === "upvote") {
@@ -66,6 +70,10 @@ const Votes = ({
 					path,
 				});
 			}
+			return toast({
+				title: `Upvote ${!hasupVoted ? "Successfull" : "removed"}`,
+				variant: !hasupVoted ? "default" : "destructive",
+			});
 		}
 		if (action === "downvote") {
 			if (type === "Question") {
@@ -85,6 +93,10 @@ const Votes = ({
 					path,
 				});
 			}
+			return toast({
+				title: `DownVote ${!hasupVoted ? "Successfull" : "removed"}`,
+				variant: !hasupVoted ? "default" : "destructive",
+			});
 		}
 	};
 
