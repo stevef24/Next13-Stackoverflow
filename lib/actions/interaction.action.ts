@@ -33,6 +33,3 @@ export async function viewQuestions(params: ViewQuestionParams) {
 		throw error;
 	}
 }
-function conntectToDatabase() {
-	throw new Error("Function not implemented.");
-}

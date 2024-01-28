@@ -75,10 +75,8 @@ export async function createQuestion(params: CreateQuestionParams) {
 	try {
 		connectToDatabase();
 
-		// getting all the data from the params object that was passed in
 		const { title, content, tags, author, path } = params;
 
-		// create the question from the model
 		const question = await QuestionModel.create({
 			title,
 			content,
@@ -86,7 +84,6 @@ export async function createQuestion(params: CreateQuestionParams) {
 		});
 
 		const tagDocuments = [];
-		// create tags or get the existing ones
 		for (const tag of tags) {
 			const existingTag = await TagModel.findOneAndUpdate(
 				{
@@ -103,8 +100,6 @@ export async function createQuestion(params: CreateQuestionParams) {
 			$push: { tags: { $each: tagDocuments } },
 		});
 
-		// create an interaction record for the user ask question action
-
 		await InteractionModel.create({
 			user: author,
 			question: question._id,
@@ -112,14 +107,13 @@ export async function createQuestion(params: CreateQuestionParams) {
 			action: "ask_question",
 		});
 
-		// increment author reputation by +5 points for creating a question
 		await UserModel.findByIdAndUpdate(author, {
 			$inc: { reputation: 5 },
 		});
 
 		revalidatePath(path);
 	} catch (error) {
-		console.log(error);
+		throw new Error("Could not find question with that ID");
 	}
 }
 
@@ -142,7 +136,7 @@ export async function getQuestionByID(params: GetQuestionByIdParams) {
 
 		return question;
 	} catch (error) {
-		throw new Error("Could not find question with that ID");
+		throw new Error("Could not create question");
 	}
 }
 
@@ -177,12 +171,9 @@ export async function upVoteQuestion(params: QuestionVoteParams) {
 			throw new Error("Could not find question with that ID");
 		}
 
-		//increment author reputation
 		await UserModel.findByIdAndUpdate(userId, {
 			$inc: { reputation: hasupVoted ? -1 : 1 },
 		});
-
-		//increament user reputation for receiving an upvote or downvote
 
 		await UserModel.findByIdAndUpdate(question.author, {
 			$inc: { reputation: hasupVoted ? -10 : 10 },
@@ -227,8 +218,6 @@ export async function downVoteQuestion(params: QuestionVoteParams) {
 		await UserModel.findByIdAndUpdate(userId, {
 			$inc: { reputation: hasdownVoted ? -1 : 1 },
 		});
-
-		//increament user reputation for receiving an upvote or downvote
 
 		await UserModel.findByIdAndUpdate(question.author, {
 			$inc: { reputation: hasdownVoted ? -10 : 10 },
@@ -289,7 +278,7 @@ export async function getTopQuestions() {
 
 		return questions;
 	} catch (error) {
-		console.log(error);
+		throw new Error("Could not find question with that ID");
 	}
 }
 
@@ -299,7 +288,6 @@ export async function getRecommendedQuestions(params: RecommendedParams) {
 
 		const { userId, page = 1, pageSize = 20, searchQuery } = params;
 
-		// find user
 		const user = await UserModel.findOne({ clerkId: userId });
 
 		if (!user) {
@@ -308,12 +296,10 @@ export async function getRecommendedQuestions(params: RecommendedParams) {
 
 		const skipAmount = (page - 1) * pageSize;
 
-		// Find the user's interactions
 		const userInteractions = await InteractionModel.find({ user: user._id })
 			.populate("tags")
 			.exec();
 
-		// Extract tags from user's interactions
 		const userTags = userInteractions.reduce((tags, interaction) => {
 			if (interaction.tags) {
 				tags = tags.concat(interaction.tags);
@@ -321,7 +307,6 @@ export async function getRecommendedQuestions(params: RecommendedParams) {
 			return tags;
 		}, []);
 
-		// Get distinct tag IDs from user's interactions
 		const distinctUserTagIds = [
 			// @ts-ignore
 			...new Set(userTags.map((tag: any) => tag._id)),
@@ -329,8 +314,8 @@ export async function getRecommendedQuestions(params: RecommendedParams) {
 
 		const query: FilterQuery<typeof QuestionModel> = {
 			$and: [
-				{ tags: { $in: distinctUserTagIds } }, // Questions with user's tags
-				{ author: { $ne: user._id } }, // Exclude user's own questions
+				{ tags: { $in: distinctUserTagIds } },
+				{ author: { $ne: user._id } },
 			],
 		};
 
