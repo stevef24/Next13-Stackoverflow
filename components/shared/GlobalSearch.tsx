@@ -75,7 +75,7 @@ const GlobalSearch = () => {
 					value={search}
 					type="text"
 					placeholder="search globally"
-					className="paragraph-regular no-focus placeholder  shadow-none outline-none background-light800_darkgradient border-none text-dark400_light700"
+					className="paragraph-regular no-focus placeholder  shadow-none outline-none text-dark400_light700 bg-transparent border-none text-dark400_light700"
 					onChange={(e) => {
 						setSearch(e.target.value);
 						if (!isOpen) setIsOpen(true);

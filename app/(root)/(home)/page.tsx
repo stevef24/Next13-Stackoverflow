@@ -4,16 +4,39 @@ import LocalSearchBar from "@/components/shared/LocalSearchBar";
 import NoResult from "@/components/shared/NoResult";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
-import { getQuestions } from "@/lib/actions/question.action";
+import {
+	getQuestions,
+	getRecommendedQuestions,
+} from "@/lib/actions/question.action";
 import { SearchParamsProps } from "@/types";
 import Link from "next/link";
+import type { Metadata } from "next";
+import { auth } from "@clerk/nextjs";
+
+export const metadata: Metadata = {
+	title: "Home | Dev Overflow",
+	description: "Home page",
+};
 
 export default async function Home({ searchParams }: SearchParamsProps) {
-	const results = await getQuestions({
-		searchQuery: searchParams?.q,
-		filter: searchParams?.filter?.toLowerCase(),
-		page: searchParams.page ? +searchParams.page : 1,
-	});
+	const { userId } = auth();
+
+	let results;
+	if (searchParams?.filter === "recommended") {
+		if (userId) {
+			results = await getRecommendedQuestions({
+				userId,
+				searchQuery: searchParams?.q,
+				page: searchParams.page ? +searchParams.page : 1,
+			});
+		}
+	} else {
+		results = await getQuestions({
+			searchQuery: searchParams?.q,
+			filter: searchParams?.filter?.toLowerCase(),
+			page: searchParams.page ? +searchParams.page : 1,
+		});
+	}
 
 	return (
 		<>
