@@ -281,7 +281,7 @@ export async function getUserInfo(params: GetUserByIdParams) {
 
 		return { user, questionsAsked, totalAnswers, badgeCount };
 	} catch (error) {
-		throw error;
+		throw new Error("Error fetching user info");
 	}
 }
 
@@ -316,7 +316,7 @@ export async function getUserQuestions(params: GetUserStatsParams) {
 
 		return { totalQuestions, questions: userQuestions, isNextPage };
 	} catch (error) {
-		throw error;
+		throw new Error("Error fetching user answers");
 	}
 }
 
@@ -348,6 +348,6 @@ export async function getUserAnswers(params: GetUserStatsParams) {
 		const isNextPage = totalUserAnswers > skip + userAnswers.length;
 		return { totalAnswers, answers: userAnswers, isNextPage };
 	} catch (error) {
-		throw new Error("Error fetching user answers");
+		throw new Error("Error fetching getUserQuestions");
 	}
 }
