@@ -30,7 +30,7 @@ const AllAnswers = async ({
 	});
 
 	return (
-		<div className="my-4 ">
+		<div className="my-4">
 			<div className="flex items-center justify-between ">
 				<h3 className="primary-text-gradient">
 					{totalAnswers} {totalAnswers > 1 ? "answers" : "answer"}
