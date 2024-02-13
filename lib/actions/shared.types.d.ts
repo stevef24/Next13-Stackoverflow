@@ -47,7 +47,8 @@ export interface ViewQuestionParams {
 
 export interface JobFilterParams {
 	query: string;
-	page: string;
+	page: number;
+	filter?: string;
 }
 
 export interface GetQuestionsParams {

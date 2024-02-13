@@ -1,5 +1,5 @@
 "use client";
-import { type AnswerFilter } from "@/constants/filters";
+import { type FilterType } from "@/constants/filters";
 import React, { useState } from "react";
 
 import {
@@ -14,7 +14,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { formUrlQuery } from "@/lib/utils";
 
 type FiltersProps = {
-	filters: AnswerFilter[];
+	filters: FilterType[];
 	otherClasses?: string;
 	containerClasses?: string;
 };
