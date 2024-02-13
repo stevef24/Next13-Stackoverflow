@@ -5,6 +5,9 @@ import { CountyFilter } from "@/constants/filters";
 import Link from "next/link";
 import Image from "next/image";
 import { CiImageOn } from "react-icons/ci";
+import { BsSuitcaseLg } from "react-icons/bs";
+import { CiMoneyBill } from "react-icons/ci";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 const Page = () => {
 	const results = {
@@ -49,7 +52,9 @@ const Page = () => {
 						<div className="pl-6 w-7/8 flex flex-col ">
 							<div className="flex justify-between items-center mb-2">
 								<div className="flex justify-center items-center">
-									<div className="flex ">Principal Salesforce Developer</div>
+									<div className="flex font-semibold">
+										Principal Salesforce Developer
+									</div>
 									<div className="px-3">
 										<span className="px-3.5 py-2  text-[10px] uppercase rounded-md dark:bg-dark-400 light:bg-light-800  text-light-500 flex justify-center items-center">
 											SOFTWARE
@@ -60,17 +65,26 @@ const Page = () => {
 									<div className="ml-10">hello</div>
 								</div>
 							</div>
-							<div>
+							<div className="text-sm">
 								Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro
 								nostrum aliquid cum, natus sapiente maxime nemo neque dolorem
 								nisi mollitia!
 							</div>
 							<div className="flex justify-between items-center">
-								<div>
-									<span>Full-time</span>
-									<span> salary</span>
+								<div className="text-light-400 flex text-sm gap-6">
+									<div className="flex justify-center items-center gap-1">
+										<BsSuitcaseLg />
+										<span>Full-time</span>
+									</div>
+									<div className="flex justify-center items-center gap-1">
+										<CiMoneyBill size={20} />
+										<span> salary</span>
+									</div>
 								</div>
-								<div>view Job</div>
+								<div className="primary-text-gradient flex items-center justify-center gap-1 text-sm">
+									view Job
+									<FaExternalLinkAlt />
+								</div>
 							</div>
 						</div>
 					</div>
