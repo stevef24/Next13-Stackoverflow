@@ -192,7 +192,11 @@
 	}
 
 	.primary-gradient {
-		background: linear-gradient(129deg, #ff7000 0%, #e2995f 100%);
+		background: radial-gradient(
+			circle at 10% 20%,
+			rgb(111, 111, 219) 0%,
+			rgb(182, 109, 246) 72.4%
+		);
 	}
 
 	.dark-gradient {
