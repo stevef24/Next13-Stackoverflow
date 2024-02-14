@@ -4,13 +4,13 @@ import { CountyFilter } from "@/constants/filters";
 import JobCard from "@/components/Cards/JobCard";
 import { getJobsList } from "@/lib/actions/jobs.action";
 import { SearchParamsProps } from "@/types";
+import Pagination from "@/components/ui/PaginationSearch";
 
 const Page = async ({ searchParams }: SearchParamsProps) => {
-	const { data } = await getJobsList({
+	const { results, isNextPage } = await getJobsList({
 		query: searchParams.q || "developer",
 		page: searchParams.page ? +searchParams.page : 1,
 	});
-	// console.log(data);
 
 	return (
 		<>
@@ -32,8 +32,8 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
 				/>
 			</div>
 			<div className="mt-10 flex w-full flex-col gap-6">
-				{data.length > 0 ? (
-					data.map((result: any) => (
+				{results.data.length > 0 ? (
+					results.data.map((result: any) => (
 						<JobCard results={result} key={result.job_id} />
 					))
 				) : (
@@ -43,6 +43,12 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
 						</h2>
 					</div>
 				)}
+			</div>
+			<div className="mt-10">
+				<Pagination
+					pageNumber={searchParams?.page ? +searchParams.page : 1}
+					isNextPage={isNextPage}
+				/>
 			</div>
 		</>
 	);
