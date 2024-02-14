@@ -1,17 +1,17 @@
 "use client";
-import { AnswerFilter } from "@/constants/filters";
+import { FilterType } from "@/constants/filters";
 import { Button } from "../ui/button";
 import React, { useState } from "react";
 
 type HomeFiltersProps = {
-	filters: AnswerFilter[];
+	filters: FilterType[];
 };
 const HomeFilters = ({ filters }: HomeFiltersProps): React.JSX.Element => {
 	const [isActive, setIsActive] = useState("newest");
 
 	return (
 		<div className="md:flex mt-5 justify-center gap-3 hidden flex-wrap">
-			{filters.map((item: AnswerFilter) => {
+			{filters.map((item: FilterType) => {
 				return (
 					<Button
 						className={`${
