@@ -11,7 +11,6 @@ export async function getJobsList({ query, page, filter }: JobFilterParams) {
 				"X-RapidAPI-Host": "jsearch.p.rapidapi.com",
 			},
 		};
-		// "6b4f55fc0cmsh1fcf93fb6de6e0ep132b23jsn36ca8943529e"
 		const response = await fetch(url, options);
 		const results = await response.json();
 		console.log(results);
