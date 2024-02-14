@@ -64,7 +64,6 @@ export async function getAllUsers(params: GetAllUsersParams) {
 
 		return { users, isNextPage };
 	} catch (error) {
-		console.log(error);
 		throw error;
 	}
 }
@@ -78,7 +77,7 @@ export async function getUserById(params: GetUserByIdParams) {
 		const user = await UserModel.findOne({ clerkId: userId });
 		return user;
 	} catch (error) {
-		console.log(error);
+		throw error;
 	}
 }
 
@@ -89,7 +88,6 @@ export async function createUser(userParams: CreateUserParams) {
 		const newUser = await UserModel.create(userParams);
 		return newUser;
 	} catch (error) {
-		console.log(error);
 		throw error;
 	}
 }
@@ -103,7 +101,9 @@ export async function updateUser(userParams: UpdateUserParams) {
 		await UserModel.findOneAndUpdate({ clerkId }, updateData, { new: true });
 
 		revalidatePath(path);
-	} catch (error) {}
+	} catch (error) {
+		throw error;
+	}
 }
 
 export async function deleteUser(params: DeleteUserParams) {
@@ -124,7 +124,6 @@ export async function deleteUser(params: DeleteUserParams) {
 
 		return deletedUser;
 	} catch (error) {
-		console.log(error);
 		throw error;
 	}
 }
@@ -135,7 +134,6 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 		const { userId, questionId, path } = params;
 
 		const user = await UserModel.findById({ _id: userId });
-		console.log(user);
 
 		if (!user) throw new Error("User not found");
 
@@ -156,7 +154,6 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 
 		revalidatePath(path);
 	} catch (error) {
-		console.log(error);
 		throw error;
 	}
 }
@@ -224,7 +221,6 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
 
 		return { questions: savedQuestions, isNext };
 	} catch (error) {
-		console.log(error);
 		throw error;
 	}
 }

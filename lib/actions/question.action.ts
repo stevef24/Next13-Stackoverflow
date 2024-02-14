@@ -67,7 +67,7 @@ export async function getQuestions(params: GetQuestionsParams) {
 
 		return { questions, isNextPage };
 	} catch (error) {
-		console.log(error);
+		throw new Error("Could not find questions");
 	}
 }
 

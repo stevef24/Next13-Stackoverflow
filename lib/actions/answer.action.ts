@@ -39,7 +39,6 @@ export async function createAnswer(params: CreateAnswerParams) {
 
 		revalidatePath(path);
 	} catch (error) {
-		console.log(error);
 		throw error;
 	}
 }
@@ -82,7 +81,6 @@ export async function getAllAnswers(params: GetAnswersParams) {
 		const isNextPage = totalAnswersCount > skip + answers.length;
 		return { answers, isNextPage };
 	} catch (error) {
-		console.log(error);
 		throw error;
 	}
 }
@@ -112,7 +110,6 @@ export async function upVoteAnswer(params: AnswerVoteParams) {
 		if (!Answer) {
 			throw new Error("Could not find answer with that ID");
 		}
-		console.log(userId);
 
 		await UserModel.findByIdAndUpdate(userId, {
 			$inc: { reputation: hasupVoted ? -2 : 2 },

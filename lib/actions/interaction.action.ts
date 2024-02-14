@@ -19,7 +19,7 @@ export async function viewQuestions(params: ViewQuestionParams) {
 				question: questionId,
 			});
 			if (existingInteraction) {
-				console.log("user }has already viewed this question");
+				console.log("user has already viewed this question");
 			}
 		}
 
@@ -29,7 +29,6 @@ export async function viewQuestions(params: ViewQuestionParams) {
 			question: questionId,
 		});
 	} catch (error) {
-		console.log(error);
 		throw error;
 	}
 }

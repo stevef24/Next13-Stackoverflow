@@ -55,7 +55,6 @@ export async function getAllTags(params: GetAllTagsParams) {
 
 		return { tags, isNextPage };
 	} catch (error) {
-		console.log(error);
 		throw new Error("No tags found");
 	}
 }
@@ -75,7 +74,6 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
 			{ _id: "2", name: "tag2" },
 		];
 	} catch (error) {
-		console.log(error);
 		throw error;
 	}
 }
@@ -120,7 +118,6 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 
 		return { tagTitle: tag.name, questions, isNextPage };
 	} catch (error) {
-		console.log(error);
 		throw new Error("No tags found");
 	}
 }
@@ -141,10 +138,8 @@ export async function getTopTags() {
 		]);
 
 		if (!tags) throw new Error("No tags found");
-		console.log(tags);
 		return tags;
 	} catch (error) {
-		console.log(error);
 		throw new Error("No tags found");
 	}
 }

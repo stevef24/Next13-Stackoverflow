@@ -46,8 +46,8 @@ export async function globalSearch(params: SearchParams) {
 							type === "user"
 								? item.clerkId
 								: type === "answer"
-								? item.question
-								: item._id,
+									? item.question
+									: item._id,
 					}))
 				);
 			}
@@ -55,7 +55,6 @@ export async function globalSearch(params: SearchParams) {
 			// SEARCH IN THE SPECIFIED MODEL TYPE
 			const modelInfo = modelsAndTypes.find((item) => item.type === type);
 
-			console.log({ modelInfo, type });
 			if (!modelInfo) {
 				throw new Error("Invalid search type");
 			}
@@ -63,8 +62,6 @@ export async function globalSearch(params: SearchParams) {
 			const queryResults = await modelInfo.model
 				.find({ [modelInfo.searchField]: regexQuery })
 				.limit(8);
-
-			console.log({ queryResults });
 
 			results = queryResults.map((item) => {
 				return {
@@ -77,14 +74,13 @@ export async function globalSearch(params: SearchParams) {
 						type === "user"
 							? item.clerkId
 							: type === "answer"
-							? item.question
-							: item._id,
+								? item.question
+								: item._id,
 				};
 			});
 		}
 		return JSON.stringify(results);
 	} catch (error) {
-		console.log(`Error fetching global results, ${error}`);
 		throw error;
 	}
 }

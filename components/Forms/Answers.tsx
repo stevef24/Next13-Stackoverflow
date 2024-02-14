@@ -93,7 +93,7 @@ const Answers = ({ authorId, question, questionId }: Props) => {
 				editor.setContent(formattedAnswer);
 			}
 		} catch (error) {
-			console.log(error);
+			throw new Error("Failed to generate AI answer");
 		} finally {
 			setIsSubmittingAI(false);
 		}

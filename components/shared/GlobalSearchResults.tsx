@@ -28,7 +28,6 @@ const GlobalSearchResults = () => {
 
 				setResults(JSON.parse(res));
 			} catch (err) {
-				console.log(err);
 				throw new Error();
 			} finally {
 				setIsLoading(false);
