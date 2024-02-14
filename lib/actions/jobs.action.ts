@@ -13,7 +13,6 @@ export async function getJobsList({ query, page, filter }: JobFilterParams) {
 		};
 		const response = await fetch(url, options);
 		const results = await response.json();
-		console.log(results);
 		return results;
 	} catch (error) {
 		throw new Error("No jobs found");

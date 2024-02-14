@@ -141,6 +141,7 @@ export async function getTopTags() {
 		]);
 
 		if (!tags) throw new Error("No tags found");
+		console.log(tags);
 		return tags;
 	} catch (error) {
 		console.log(error);
