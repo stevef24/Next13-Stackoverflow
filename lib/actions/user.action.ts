@@ -64,7 +64,7 @@ export async function getAllUsers(params: GetAllUsersParams) {
 
 		return { users, isNextPage };
 	} catch (error) {
-		throw error;
+		throw new Error("Error fetching users");
 	}
 }
 
@@ -77,7 +77,7 @@ export async function getUserById(params: GetUserByIdParams) {
 		const user = await UserModel.findOne({ clerkId: userId });
 		return user;
 	} catch (error) {
-		throw error;
+		throw new Error("Error fetching user");
 	}
 }
 
@@ -88,7 +88,7 @@ export async function createUser(userParams: CreateUserParams) {
 		const newUser = await UserModel.create(userParams);
 		return newUser;
 	} catch (error) {
-		throw error;
+		throw new Error("Error creating user");
 	}
 }
 
@@ -102,7 +102,7 @@ export async function updateUser(userParams: UpdateUserParams) {
 
 		revalidatePath(path);
 	} catch (error) {
-		throw error;
+		throw new Error("Error updating user");
 	}
 }
 
@@ -124,7 +124,7 @@ export async function deleteUser(params: DeleteUserParams) {
 
 		return deletedUser;
 	} catch (error) {
-		throw error;
+		throw new Error("Error deleting user");
 	}
 }
 
@@ -154,7 +154,7 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 
 		revalidatePath(path);
 	} catch (error) {
-		throw error;
+		throw new Error("Error toggling save question");
 	}
 }
 
@@ -221,7 +221,7 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
 
 		return { questions: savedQuestions, isNext };
 	} catch (error) {
-		throw error;
+		throw new Error("Error fetching saved questions");
 	}
 }
 

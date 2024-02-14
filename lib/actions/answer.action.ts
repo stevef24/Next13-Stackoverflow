@@ -27,7 +27,7 @@ export async function createAnswer(params: CreateAnswerParams) {
 
 		await InteractionModel.create({
 			user: author,
-			question: question,
+			question,
 			action: "answer",
 			answer: newAnswer._id,
 			tags: questionObject.tags,
@@ -124,7 +124,7 @@ export async function upVoteAnswer(params: AnswerVoteParams) {
 
 		revalidatePath(path);
 	} catch (error) {
-		throw new Error("Could not find answer with that ID");
+		throw error;
 	}
 }
 export async function downVoteAnswer(params: AnswerVoteParams) {

@@ -29,6 +29,6 @@ export async function viewQuestions(params: ViewQuestionParams) {
 			question: questionId,
 		});
 	} catch (error) {
-		throw error;
+		throw new Error("Error viewing question");
 	}
 }
