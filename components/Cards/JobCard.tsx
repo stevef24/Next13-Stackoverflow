@@ -1,7 +1,6 @@
 import { capitalizeFirstLetter } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { BsSuitcaseLg } from "react-icons/bs";
 
 const JobCard = ({ results }: any) => {
 	return (
@@ -53,7 +52,13 @@ const JobCard = ({ results }: any) => {
 				<div className="flex justify-between items-center">
 					<div className="text-light-400 flex text-sm gap-6">
 						<div className="flex justify-center items-center gap-1 text-light-400">
-							<BsSuitcaseLg size={16} />
+							<Image
+								src={"/assets/icons/suitcase.svg"}
+								alt={"suitcase icon"}
+								width={14}
+								height={14}
+								className="text-light-400"
+							/>
 							<span>{capitalizeFirstLetter(results.job_employment_type)}</span>
 						</div>
 						<div className="flex justify-center items-center gap-1">
