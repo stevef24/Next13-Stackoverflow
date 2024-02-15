@@ -81,6 +81,6 @@ export async function globalSearch(params: SearchParams) {
 		}
 		return JSON.stringify(results);
 	} catch (error) {
-		throw error;
+		throw new Error("Could not fetch search results");
 	}
 }

@@ -39,7 +39,7 @@ export async function createAnswer(params: CreateAnswerParams) {
 
 		revalidatePath(path);
 	} catch (error) {
-		throw error;
+		throw new Error("Could not create answer");
 	}
 }
 
@@ -81,7 +81,7 @@ export async function getAllAnswers(params: GetAnswersParams) {
 		const isNextPage = totalAnswersCount > skip + answers.length;
 		return { answers, isNextPage };
 	} catch (error) {
-		throw error;
+		throw new Error("Could not fetch answers");
 	}
 }
 export async function upVoteAnswer(params: AnswerVoteParams) {
@@ -124,7 +124,7 @@ export async function upVoteAnswer(params: AnswerVoteParams) {
 
 		revalidatePath(path);
 	} catch (error) {
-		throw error;
+		throw new Error("Could not find answer with that ID");
 	}
 }
 export async function downVoteAnswer(params: AnswerVoteParams) {

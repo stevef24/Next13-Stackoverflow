@@ -74,7 +74,7 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
 			{ _id: "2", name: "tag2" },
 		];
 	} catch (error) {
-		throw error;
+		throw new Error("No tags found");
 	}
 }
 
