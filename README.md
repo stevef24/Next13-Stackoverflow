@@ -63,8 +63,6 @@ Tinymce: A rich text editor for content creation (like comments or forum posts).
 
 ## <a name="features">🔋 Features</a>
 
-Absolutely! Here's a revamped version of the feature list, focusing on what users can do and the benefits the app provides:
-
 👉 **Secure and Seamless Access:** Effortlessly register, log in, and explore protected content with confidence.
 
 👉 **Discover Relevant Content:**
